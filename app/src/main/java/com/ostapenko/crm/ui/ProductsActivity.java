@@ -82,16 +82,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
     }
 
     @Override public void onSell(Product p) {
-        // на прототипе продаём 1 штуку, сумма пусть будет 100
-        io.execute(() -> {
-            try {
-                salesService.sell(p.id, 1, 100.0, 100.0);
-                runOnUiThread(() -> Toast.makeText(this, "Продано: " + p.name, Toast.LENGTH_SHORT).show());
-                loadData();
-            } catch (Exception e) {
-                runOnUiThread(() -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show());
-            }
-        });
+        showSellDialog(p);
     }
 
     @Override public void onBindForServings(Product p, TextView tvServings) {
@@ -100,5 +91,45 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
             int max = (int)Math.floor(m == null ? 0 : m);
             runOnUiThread(() -> tvServings.setText("Можно приготовить: " + max));
         });
+    }
+
+    private void showSellDialog(Product p) {
+        View view = getLayoutInflater().inflate(R.layout.dialog_sell, null, false);
+        EditText etQty = view.findViewById(R.id.etQty);
+        EditText etPrice = view.findViewById(R.id.etPrice);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Продать: " + p.name)
+                .setView(view)
+                .setPositiveButton("OK", (d, w) -> {
+                    int parsedQty;
+                    double parsedPrice;
+                    try { parsedQty = Integer.parseInt(etQty.getText().toString().trim()); } catch (Exception e) { parsedQty = 0; }
+                    try { parsedPrice = Double.parseDouble(etPrice.getText().toString().trim()); } catch (Exception e) { parsedPrice = 0; }
+
+                    if (parsedQty <= 0 || parsedPrice <= 0) {
+                        Toast.makeText(this, "Неверные значения", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    // 👇 финальные значения для использования в ламбде
+                    final int qtyVal = parsedQty;
+                    final double priceVal = parsedPrice;
+                    final double subtotalVal = qtyVal * priceVal;
+
+                    io.execute(() -> {
+                        try {
+                            salesService.sell(p.id, qtyVal, subtotalVal, subtotalVal);
+                            runOnUiThread(() -> {
+                                Toast.makeText(this, "Продано: " + qtyVal + " × " + p.name, Toast.LENGTH_SHORT).show();
+                                loadData(); // обновим «Можно приготовить»
+                            });
+                        } catch (Exception e) {
+                            runOnUiThread(() -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show());
+                        }
+                    });
+                })
+                .setNegativeButton("Отмена", null)
+                .show();
     }
 }

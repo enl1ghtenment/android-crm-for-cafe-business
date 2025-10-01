@@ -21,6 +21,7 @@
         </activity>
         <activity android:name=".ui.InventoryActivity" />
         <activity android:name=".ui.RecipeActivity" />
+        <activity android:name=".ui.SalesActivity" />
     </application>
 
 </manifest>
