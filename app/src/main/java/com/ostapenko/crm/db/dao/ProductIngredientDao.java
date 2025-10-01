@@ -21,11 +21,9 @@ public interface ProductIngredientDao {
 
     // Сколько порций можно сделать из текущих остатков:
     // берем min(stock / quantity) по всем ингредиентам рецепта
-    @Query("""
-           SELECT MIN(i.stock / pi.quantity)
-           FROM product_ingredients pi
-           JOIN ingredients i ON i.id = pi.ingredientId
-           WHERE pi.productId = :productId
-           """)
+    @Query("SELECT MIN(i.stock / pi.quantity) " +
+            "FROM product_ingredients pi " +
+            "JOIN ingredients i ON i.id = pi.ingredientId " +
+            "WHERE pi.productId = :productId")
     Double getMaxServings(int productId);
 }
