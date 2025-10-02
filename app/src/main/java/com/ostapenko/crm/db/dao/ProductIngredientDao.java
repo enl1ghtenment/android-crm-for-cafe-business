@@ -1,6 +1,10 @@
 package com.ostapenko.crm.db.dao;
 
-import androidx.room.*;
+import androidx.room.Dao;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
+import com.ostapenko.crm.dto.RecipeItemView;
 import com.ostapenko.crm.entity.ProductIngredient;
 import java.util.List;
 
@@ -16,14 +20,42 @@ public interface ProductIngredientDao {
     @Query("DELETE FROM product_ingredients WHERE productId = :productId")
     void deleteByProduct(int productId);
 
+    // НУЖЕН для SalesService (не удалять!)
     @Query("SELECT * FROM product_ingredients WHERE productId = :productId")
     List<ProductIngredient> getRecipe(int productId);
 
-    // Сколько порций можно сделать из текущих остатков:
-    // берем min(stock / quantity) по всем ингредиентам рецепта
+    // Для отображения в RecipeActivity (с именем ингредиента)
+    @Query("SELECT pi.id AS id, " +
+            "       pi.ingredientId AS ingredientId, " +
+            "       i.name AS ingredientName, " +
+            "       i.unit AS unit, " +
+            "       pi.quantity AS quantity " +
+            "FROM product_ingredients pi " +
+            "JOIN ingredients i ON i.id = pi.ingredientId " +
+            "WHERE pi.productId = :productId " +
+            "ORDER BY i.name")
+    List<RecipeItemView> getRecipeView(int productId);
+
+    // Удаление конкретной строки рецепта
+    @Query("DELETE FROM product_ingredients WHERE id = :rowId")
+    void deleteRow(int rowId);
+
+    // Сколько порций можно приготовить (используется в ProductsActivity)
     @Query("SELECT MIN(i.stock / pi.quantity) " +
             "FROM product_ingredients pi " +
             "JOIN ingredients i ON i.id = pi.ingredientId " +
             "WHERE pi.productId = :productId")
     Double getMaxServings(int productId);
+
+    @Query("SELECT i.id AS ingredientId, " +
+            "       i.name AS ingredientName, " +
+            "       i.unit AS unit, " +
+            "       i.price AS pricePerUnit, " +
+            "       pi.quantity AS quantityPerItem " +
+            "FROM product_ingredients pi " +
+            "JOIN ingredients i ON i.id = pi.ingredientId " +
+            "WHERE pi.productId = :productId " +
+            "ORDER BY i.name")
+    java.util.List<com.ostapenko.crm.dto.CostRow> getCostRows(int productId);
+
 }

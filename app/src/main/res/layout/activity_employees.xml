@@ -1,41 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Контент -->
     <LinearLayout
         android:id="@+id/content"
         android:orientation="vertical"
+        android:padding="12dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Поиск -->
         <EditText
-            android:id="@+id/etSearchProducts"
+            android:id="@+id/etSearch"
+            android:hint="Поиск (имя/фамилия/логин)"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Поиск товара (название/описание)"
             android:inputType="text"
-            android:imeOptions="actionSearch"
-            android:padding="12dp" />
+            android:imeOptions="actionSearch"/>
 
-        <!-- Список -->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvProducts"
+            android:id="@+id/rvEmployees"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:padding="12dp" />
+            android:paddingTop="8dp"/>
     </LinearLayout>
 
+    <!-- FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAddProduct"
+        android:id="@+id/fabAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/add"
+        android:layout_margin="16dp"
         app:srcCompat="@android:drawable/ic_input_add"
-        app:layout_anchorGravity="bottom|end"
         app:layout_anchor="@id/content"
-        android:layout_margin="16dp" />
+        app:layout_anchorGravity="bottom|end"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

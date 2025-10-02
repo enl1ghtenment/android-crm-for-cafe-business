@@ -63,4 +63,37 @@ public class SalesService {
         item.subtotal = subtotal;
         saleItemDao.insert(item);
     }
+
+    @WorkerThread
+    public com.ostapenko.crm.dto.CostEstimate estimateCost(int productId, int qty) {
+        if (qty <= 0) throw new IllegalArgumentException("qty must be > 0");
+
+        // 1) сколько вообще можем сделать из остатков — пригодится для предупреждения
+        Double m = recipeDao.getMaxServings(productId);
+        int max = (m == null) ? 0 : (int) Math.floor(m);
+
+        // 2) строки для расчёта
+        java.util.List<com.ostapenko.crm.dto.CostRow> rows = recipeDao.getCostRows(productId);
+
+        com.ostapenko.crm.dto.CostEstimate result = new com.ostapenko.crm.dto.CostEstimate();
+        result.productId = productId;
+        result.qty = qty;
+        result.maxServingsAvailable = max;
+
+        double total = 0.0;
+        for (com.ostapenko.crm.dto.CostRow r : rows) {
+            com.ostapenko.crm.dto.CostEstimate.CostLine line = new com.ostapenko.crm.dto.CostEstimate.CostLine();
+            line.ingredientId = r.ingredientId;
+            line.ingredientName = r.ingredientName;
+            line.unit = r.unit;
+            line.pricePerUnit = r.pricePerUnit;
+            line.quantityForOrder = r.quantityPerItem * qty;
+            line.lineCost = line.quantityForOrder * r.pricePerUnit;
+            total += line.lineCost;
+            result.lines.add(line);
+        }
+        result.totalCost = total;
+        return result;
+    }
+
 }

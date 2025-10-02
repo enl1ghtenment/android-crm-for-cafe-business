@@ -12,16 +12,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CRM">
         <activity
-            android:name=".ui.ProductsActivity"
+            android:name=".ui.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.InventoryActivity" />
-        <activity android:name=".ui.RecipeActivity" />
-        <activity android:name=".ui.SalesActivity" />
+        <activity android:name=".ui.HomeActivity"/>
+        <activity android:name=".ui.InventoryActivity"/>
+        <activity android:name=".ui.ProductsActivity"/>
+        <activity android:name=".ui.RecipeActivity"/>
+        <activity android:name=".ui.SalesActivity"/>
     </application>
 
 </manifest>

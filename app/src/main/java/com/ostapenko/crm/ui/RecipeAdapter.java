@@ -8,20 +8,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.ostapenko.crm.R;
-import com.ostapenko.crm.entity.ProductIngredient;
+import com.ostapenko.crm.dto.RecipeItemView;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.VH> {
 
-    public interface Listener { void onDelete(ProductIngredient row); }
+    public interface Listener { void onDelete(int rowId); }
 
-    private final List<ProductIngredient> data = new ArrayList<>();
+    private final List<RecipeItemView> data = new ArrayList<>();
     private final Listener listener;
 
     public RecipeAdapter(Listener l) { this.listener = l; }
 
-    public void submit(List<ProductIngredient> items) {
+    public void submit(List<RecipeItemView> items) {
         data.clear();
         if (items != null) data.addAll(items);
         notifyDataSetChanged();
@@ -35,11 +35,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.VH> {
     }
 
     @Override public void onBindViewHolder(@NonNull VH h, int pos) {
-        ProductIngredient r = data.get(pos);
-        h.tvIngredientName.setText("ID:" + r.ingredientId); // упростим (имя подтянем в Activity)
+        RecipeItemView r = data.get(pos);
+        h.tvIngredientName.setText(r.ingredientName + " (" + r.unit + ")");
         h.tvQty.setText(String.valueOf(r.quantity));
         h.btnDelete.setOnClickListener(v -> {
-            if (listener != null) listener.onDelete(r);
+            if (listener != null) listener.onDelete(r.id);
         });
     }
 

@@ -54,6 +54,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeAdapter.L
 
         androidx.recyclerview.widget.RecyclerView rv = findViewById(R.id.rvRecipe);
         rv.setLayoutManager(new LinearLayoutManager(this));
+        // 👇 адаптер уже принимает Listener с onDelete(int rowId)
         adapter = new RecipeAdapter(this);
         rv.setAdapter(adapter);
 
@@ -63,15 +64,9 @@ public class RecipeActivity extends AppCompatActivity implements RecipeAdapter.L
 
     private void loadData() {
         io.execute(() -> {
-            List<ProductIngredient> recipe = recipeDao.getRecipe(productId);
-            // Подготовим карту имен ингредиентов (простая версия)
-            List<Ingredient> allIng = ingredientDao.findAll();
-            ingredientNames.clear();
-            for (Ingredient i : allIng) ingredientNames.put(i.id, i.name);
-
-            runOnUiThread(() -> {
-                adapter.submit(recipe);
-            });
+            // 👇 теперь берём JOIN-представление
+            List<com.ostapenko.crm.dto.RecipeItemView> recipe = recipeDao.getRecipeView(productId);
+            runOnUiThread(() -> adapter.submit(recipe));
         });
     }
 
@@ -119,15 +114,9 @@ public class RecipeActivity extends AppCompatActivity implements RecipeAdapter.L
     }
 
     // ==== RecipeAdapter.Listener ====
-    @Override public void onDelete(ProductIngredient row) {
+    @Override public void onDelete(int rowId) {
         io.execute(() -> {
-            // Простая реализация: удаляем строку через rawQuery
-            // Можно завести @Delete в DAO, если добавишь метод
-            AppDatabase db = AppDatabase.getInstance(getApplicationContext());
-            db.runInTransaction(() -> {
-                db.getOpenHelper().getWritableDatabase()
-                        .execSQL("DELETE FROM product_ingredients WHERE id = " + row.id);
-            });
+            recipeDao.deleteRow(rowId);
             loadData();
         });
     }

@@ -15,9 +15,10 @@ import com.ostapenko.crm.entity.*;
                 Product.class,
                 ProductIngredient.class,
                 Sale.class,
-                SaleItem.class
+                SaleItem.class,
+                User.class
         },
-        version = 1,
+        version = 3,
         exportSchema = true
 )
 @TypeConverters({Converters.class})
@@ -28,6 +29,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract ProductIngredientDao productIngredientDao();
     public abstract SaleDao saleDao();
     public abstract SaleItemDao saleItemDao();
+    public abstract UserDao userDao();
 
     private static volatile AppDatabase INSTANCE;
 

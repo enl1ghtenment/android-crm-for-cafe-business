@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout
+        android:orientation="vertical" android:padding="16dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <EditText android:id="@+id/etFirst"
+            android:hint="Имя" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:inputType="textCapWords"/>
+        <EditText android:id="@+id/etLast"
+            android:hint="Фамилия" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:inputType="textCapWords"/>
+        <EditText android:id="@+id/etLogin"
+            android:hint="Логин" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:inputType="textVisiblePassword"/>
+        <EditText android:id="@+id/etPassword"
+            android:hint="Пароль (оставь пустым чтобы не менять)"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:inputType="textPassword"/>
+
+        <EditText android:id="@+id/etRole"
+            android:hint="Роль (admin/employee)"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:inputType="text"/>
+        <EditText android:id="@+id/etActive"
+            android:hint="Активен? (1/0)"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:inputType="number"/>
+    </LinearLayout>
+</ScrollView>

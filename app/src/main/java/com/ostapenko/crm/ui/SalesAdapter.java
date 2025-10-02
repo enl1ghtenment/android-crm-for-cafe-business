@@ -16,10 +16,12 @@ import java.util.Locale;
 public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.VH> {
     private final List<Sale> data = new ArrayList<>();
     private final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
+    private final List<Sale> all = new ArrayList<>();
+
 
     public void submit(List<Sale> items) {
-        data.clear();
-        if (items != null) data.addAll(items);
+        all.clear(); data.clear();
+        if (items != null) { all.addAll(items); data.addAll(items); }
         notifyDataSetChanged();
     }
 
@@ -50,4 +52,19 @@ public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.VH> {
         if (s.endsWith(".0")) return s.substring(0, s.length()-2);
         return s;
     }
+
+    public void filter(String q) {
+        data.clear();
+        if (q==null || q.trim().isEmpty()) data.addAll(all);
+        else {
+            String s = q.toLowerCase();
+            for (Sale sale : all) {
+                String dateStr = df.format(sale.saleDate).toLowerCase();
+                String totalStr = String.valueOf(sale.total);
+                if (dateStr.contains(s) || totalStr.contains(s)) data.add(sale);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
 }

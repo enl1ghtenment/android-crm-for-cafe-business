@@ -32,3 +32,10 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+/.gradle/
+/build/
+/app/build/
+**/build/
+*.iml
+/app/.cxx/

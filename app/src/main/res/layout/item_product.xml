@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     card_view:cardUseCompatPadding="true"
@@ -32,26 +33,61 @@
             android:layout_height="wrap_content"
             android:text="Можно приготовить: 0" />
 
-        <LinearLayout
+        <!-- Кнопки — ровная цепочка на ConstraintLayout -->
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="6dp">
+            android:paddingTop="8dp">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnEditRecipe"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Рецепт" />
+                android:layout_height="48dp"
+                android:text="Рецепт"
+                android:textAllCaps="false"
+                android:singleLine="true"
+                android:ellipsize="end"
+                style="?attr/materialButtonStyle"
+                app:cornerRadius="24dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btnCost"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="8dp"/>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCost"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:text="Себестоим."
+                android:textAllCaps="false"
+                android:singleLine="true"
+                android:ellipsize="end"
+                style="?attr/materialButtonStyle"
+                app:cornerRadius="24dp"
+                app:layout_constraintStart_toEndOf="@id/btnEditRecipe"
+                app:layout_constraintEnd_toStartOf="@id/btnSell"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"/>
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSell"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Продать" />
-        </LinearLayout>
+                android:layout_height="48dp"
+                android:text="Продать"
+                android:textAllCaps="false"
+                android:singleLine="true"
+                android:ellipsize="end"
+                style="?attr/materialButtonStyle"
+                app:cornerRadius="24dp"
+                app:layout_constraintStart_toEndOf="@id/btnCost"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="8dp"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -2,6 +2,7 @@ package com.ostapenko.crm.ui;
 
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
@@ -27,6 +28,16 @@ public class SalesActivity extends AppCompatActivity {
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales);
+
+        EditText etSearch = findViewById(R.id.etSearchSales);
+        etSearch.addTextChangedListener(new android.text.TextWatcher() {
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter.filter(s.toString());
+            }
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void afterTextChanged(android.text.Editable s) {}
+        });
+
 
         saleDao = AppDatabase.getInstance(getApplicationContext()).saleDao();
 

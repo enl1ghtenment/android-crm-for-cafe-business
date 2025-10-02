@@ -3,9 +3,19 @@
     android:orientation="vertical" android:padding="12dp"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
+    <!-- Поиск по продажам -->
+    <EditText
+        android:id="@+id/etSearchSales"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Поиск (дата/сумма)"
+        android:inputType="text"
+        android:imeOptions="actionSearch"
+        android:padding="8dp" />
+
     <LinearLayout
         android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:orientation="horizontal" android:gravity="center">
+        android:orientation="horizontal" android:gravity="center" android:paddingTop="8dp">
 
         <Button
             android:id="@+id/btnDay" android:text="День"

@@ -8,16 +8,40 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.ostapenko.crm.R;
 import com.ostapenko.crm.entity.Ingredient;
+import com.ostapenko.crm.entity.Product;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.VH> {
 
+    public interface Listener { void onClick(Ingredient i); }
+
     private final List<Ingredient> data = new ArrayList<>();
+    private final List<Ingredient> all = new ArrayList<>();
+
+    private final Listener listener;
+
+    public IngredientAdapter(Listener listener) { this.listener = listener; }
 
     public void submit(List<Ingredient> items) {
         data.clear();
         if (items != null) data.addAll(items);
+        notifyDataSetChanged();
+    }
+
+    public void filter(String q) {
+        data.clear();
+        if (q == null || q.trim().isEmpty()) {
+            data.addAll(all);
+        } else {
+            String s = q.toLowerCase();
+            for (Ingredient i : all) {
+                String name = i.name == null ? "" : i.name.toLowerCase();
+                String unit = i.unit == null ? "" : i.unit.toLowerCase();
+                if (name.contains(s) || unit.contains(s)) data.add(i);
+            }
+        }
         notifyDataSetChanged();
     }
 
@@ -33,6 +57,9 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.VH
         h.tvName.setText(i.name);
         h.tvUnitStock.setText(i.unit + " • " + trim(i.stock));
         h.tvPrice.setText("₴" + trim(i.price) + " / ед.");
+        h.itemView.setOnClickListener(v -> {
+            if (listener != null) listener.onClick(i);
+        });
     }
 
     @Override public int getItemCount() { return data.size(); }
@@ -53,3 +80,4 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.VH
         return s;
     }
 }
+

@@ -32,4 +32,7 @@ public interface IngredientDao {
     // подсветка «скоро закончится»
     @Query("SELECT * FROM ingredients WHERE stock <= :threshold ORDER BY stock ASC")
     List<Ingredient> findLowStock(double threshold);
+
+    @Query("UPDATE ingredients SET stock = stock + :delta WHERE id = :ingredientId")
+    void increaseStock(int ingredientId, double delta);
 }

@@ -17,17 +17,25 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.VH> {
     public interface Listener {
         void onEditRecipe(Product p);
         void onSell(Product p);
-        void onBindForServings(Product p, TextView tvServings); // чтобы подсчитать на фоне
+        void onBindForServings(Product p, TextView tvServings);
+        void onCost(Product p);
+        void onDelete(Product p); // вызываем только если админ
     }
 
     private final List<Product> data = new ArrayList<>();
     private final Listener listener;
+    private final boolean canDelete; // 👈 признак «админ?»
 
-    public ProductAdapter(Listener l) { this.listener = l; }
+    private final List<Product> all = new ArrayList<>();
+
+    public ProductAdapter(Listener l, boolean canDelete) {
+        this.listener = l;
+        this.canDelete = canDelete;
+    }
 
     public void submit(List<Product> items) {
-        data.clear();
-        if (items != null) data.addAll(items);
+        all.clear(); data.clear();
+        if (items != null) { all.addAll(items); data.addAll(items); }
         notifyDataSetChanged();
     }
 
@@ -45,26 +53,49 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.VH> {
         h.tvServings.setText("Считаю…");
         if (listener != null) listener.onBindForServings(p, h.tvServings);
 
-        h.btnEditRecipe.setOnClickListener(v -> {
-            if (listener != null) listener.onEditRecipe(p);
-        });
-        h.btnSell.setOnClickListener(v -> {
-            if (listener != null) listener.onSell(p);
-        });
+        h.btnEditRecipe.setOnClickListener(v -> { if (listener != null) listener.onEditRecipe(p); });
+        h.btnCost.setOnClickListener(v -> { if (listener != null) listener.onCost(p); });
+        h.btnSell.setOnClickListener(v -> { if (listener != null) listener.onSell(p); });
+
+        // 👇 длинное нажатие на карточке — удаление ТОЛЬКО если админ
+        if (canDelete) {
+            h.itemView.setOnLongClickListener(v -> {
+                if (listener != null) listener.onDelete(p);
+                return true;
+            });
+        } else {
+            h.itemView.setOnLongClickListener(null);
+        }
     }
 
     @Override public int getItemCount() { return data.size(); }
 
     static class VH extends RecyclerView.ViewHolder {
         TextView tvName, tvDesc, tvServings;
-        Button btnEditRecipe, btnSell;
+        Button btnEditRecipe, btnCost, btnSell;
         VH(@NonNull View v) {
             super(v);
             tvName = v.findViewById(R.id.tvName);
             tvDesc = v.findViewById(R.id.tvDesc);
             tvServings = v.findViewById(R.id.tvServings);
             btnEditRecipe = v.findViewById(R.id.btnEditRecipe);
+            btnCost = v.findViewById(R.id.btnCost);
             btnSell = v.findViewById(R.id.btnSell);
         }
     }
+
+    public void filter(String q) {
+        data.clear();
+        if (q == null || q.trim().isEmpty()) data.addAll(all);
+        else {
+            String s = q.toLowerCase();
+            for (Product p : all) {
+                String n = p.name == null ? "" : p.name.toLowerCase();
+                String d = p.description == null ? "" : p.description.toLowerCase();
+                if (n.contains(s) || d.contains(s)) data.add(p);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
 }
