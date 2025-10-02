@@ -1,0 +1,15 @@
+<resources>
+    <!-- Тёмный фон по гайдам Material -->
+    <color name="md_bg">#121212</color>
+    <color name="md_surface">#1E1E1E</color>
+    <color name="md_on_bg">#EAEAEA</color>
+    <color name="md_on_surface">#D6D6D6</color>
+
+    <!-- Акцент (осветлённый вариант для дарка) -->
+    <color name="md_primary">#7DB2FF</color>
+    <color name="md_on_primary">#0A0A0A</color>
+    <color name="md_secondary">#A9C4FF</color>
+    <color name="md_on_secondary">#0B1624</color>
+    <color name="md_outline">#334155</color>
+    <color name="md_ripple">#33FFFFFF</color>
+</resources>

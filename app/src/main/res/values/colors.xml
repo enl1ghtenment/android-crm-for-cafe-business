@@ -1,5 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Нейтраль -->
+    <color name="md_bg">#FFFFFF</color>
+    <color name="md_surface">#FAFAFA</color>
+    <color name="md_on_bg">#111111</color>
+    <color name="md_on_surface">#222222</color>
+
+    <!-- Акцент (спокойный синий) -->
+    <color name="md_primary">#5B9BFF</color>
+    <color name="md_on_primary">#FFFFFF</color>
+    <color name="md_secondary">#9BB9FF</color>
+    <color name="md_on_secondary">#0F1B2D</color>
+    <color name="md_outline">#CBD5E1</color>
+    <color name="md_ripple">#1FFFFFFF</color> <!-- прозрачный белый -->
 </resources>
