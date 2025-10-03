@@ -3,14 +3,26 @@
     android:orientation="vertical" android:padding="16dp"
     android:layout_width="match_parent" android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/etQty"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:hint="Количество" android:inputType="number" />
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/TextInput.Outlined"
+        android:hint="Количество"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/etPrice"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etQty"
+            android:inputType="number"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/TextInput.Outlined"
         android:hint="Цена за шт."
-        android:inputType="numberDecimal" />
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPrice"
+            android:inputType="numberDecimal"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>

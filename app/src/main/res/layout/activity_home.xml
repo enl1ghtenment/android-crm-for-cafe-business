@@ -3,30 +3,29 @@
     android:orientation="vertical" android:padding="24dp"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btnProducts" android:text="Товар"
-        android:layout_width="match_parent" android:layout_height="wrap_content" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnProducts" style="@style/Btn.Filled"
+        android:text="Товар" android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
-    <Button
-        android:id="@+id/btnSales" android:text="Продажи"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="12dp" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSales" style="@style/Btn.Outlined"
+        android:text="Продажи" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_marginTop="12dp"/>
 
-    <Button
-        android:id="@+id/btnInventory" android:text="Склад (только админ)"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="12dp" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnInventory" style="@style/Btn.Outlined"
+        android:text="Склад (только админ)" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_marginTop="12dp"/>
 
-    <Button
-        android:id="@+id/btnEmployees"
-        android:text="Сотрудники (только админ)"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"/>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnEmployees" style="@style/Btn.Outlined"
+        android:text="Сотрудники (только админ)" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_marginTop="12dp"/>
 
-    <Button
-        android:id="@+id/btnLogout" android:text="Выйти"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="24dp" />
-
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnLogout" style="@style/Btn.Tonal"
+        android:text="Выйти" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_marginTop="24dp"/>
 </LinearLayout>
+

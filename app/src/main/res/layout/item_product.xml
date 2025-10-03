@@ -1,54 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    card_view:cardUseCompatPadding="true"
-    card_view:cardCornerRadius="12dp"
-    android:layout_marginBottom="10dp">
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    app:cardUseCompatPadding="true" app:cardCornerRadius="16dp"
+    app:cardBackgroundColor="?attr/colorSurface"
+    app:strokeColor="@color/md_outline" app:strokeWidth="1dp"
+    android:layout_marginBottom="12dp">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:padding="12dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:orientation="vertical" android:padding="12dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tvName"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textStyle="bold" android:textSize="16sp"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/tvDesc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="" />
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text=""/>
 
         <TextView
             android:id="@+id/tvServings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Можно приготовить: 0" />
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Можно приготовить: 0"/>
 
-        <!-- Кнопки — ровная цепочка на ConstraintLayout -->
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
             android:paddingTop="8dp">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnEditRecipe"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:text="Рецепт"
-                android:textAllCaps="false"
-                android:singleLine="true"
-                android:ellipsize="end"
-                style="?attr/materialButtonStyle"
-                app:cornerRadius="24dp"
+                android:id="@+id/btnEditRecipe" style="@style/Btn.Outlined"
+                android:layout_width="0dp" android:layout_height="48dp"
+                android:text="Рецепт" app:cornerRadius="24dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btnCost"
                 app:layout_constraintTop_toTopOf="parent"
@@ -56,32 +41,19 @@
                 android:layout_marginEnd="8dp"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCost"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:text="Себестоим."
-                android:textAllCaps="false"
-                android:singleLine="true"
-                android:ellipsize="end"
-                style="?attr/materialButtonStyle"
-                app:cornerRadius="24dp"
+                android:id="@+id/btnCost" style="@style/Btn.Outlined"
+                android:layout_width="0dp" android:layout_height="48dp"
+                android:text="Себестоим." app:cornerRadius="24dp"
                 app:layout_constraintStart_toEndOf="@id/btnEditRecipe"
                 app:layout_constraintEnd_toStartOf="@id/btnSell"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginStart="8dp" android:layout_marginEnd="8dp"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSell"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:text="Продать"
-                android:textAllCaps="false"
-                android:singleLine="true"
-                android:ellipsize="end"
-                style="?attr/materialButtonStyle"
-                app:cornerRadius="24dp"
+                android:id="@+id/btnSell" style="@style/Btn.Filled"
+                android:layout_width="0dp" android:layout_height="48dp"
+                android:text="Продать" app:cornerRadius="24dp"
                 app:layout_constraintStart_toEndOf="@id/btnCost"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -90,4 +62,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
+

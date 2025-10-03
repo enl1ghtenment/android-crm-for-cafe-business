@@ -10,23 +10,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Поиск -->
-        <EditText
-            android:id="@+id/etSearchProducts"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/TextInput.Outlined"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Поиск товара (название/описание)"
-            android:inputType="text"
-            android:imeOptions="actionSearch"
-            android:padding="12dp" />
+            app:startIconDrawable="@android:drawable/ic_menu_search"
+            android:paddingStart="12dp" android:paddingEnd="12dp">
 
-        <!-- Список -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etSearchProducts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionSearch"
+                android:inputType="text"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvProducts"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:padding="12dp" />
+            android:padding="12dp"
+            android:clipToPadding="false"/>
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -37,5 +43,6 @@
         app:srcCompat="@android:drawable/ic_input_add"
         app:layout_anchorGravity="bottom|end"
         app:layout_anchor="@id/content"
-        android:layout_margin="16dp" />
+        android:layout_margin="16dp"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+

@@ -1,15 +1,15 @@
 <resources>
     <!-- Нейтраль -->
-    <color name="md_bg">#FFFFFF</color>
-    <color name="md_surface">#FAFAFA</color>
-    <color name="md_on_bg">#111111</color>
-    <color name="md_on_surface">#222222</color>
+    <color name="md_bg">#0F1216</color>
+    <color name="md_surface">#151922</color>
+    <color name="md_on_bg">#E6EAF1</color>
+    <color name="md_on_surface">#D8DEE9</color>
 
-    <!-- Акцент (спокойный синий) -->
-    <color name="md_primary">#5B9BFF</color>
+    <!-- Акценты (приглушённые) -->
+    <color name="md_primary">#6E7BF2</color>       <!-- индиго, не кричит -->
     <color name="md_on_primary">#FFFFFF</color>
-    <color name="md_secondary">#9BB9FF</color>
-    <color name="md_on_secondary">#0F1B2D</color>
-    <color name="md_outline">#CBD5E1</color>
-    <color name="md_ripple">#1FFFFFFF</color> <!-- прозрачный белый -->
+    <color name="md_secondary">#3A3F4B</color>     <!-- для тональных кнопок -->
+    <color name="md_on_secondary">#E6EAF1</color>
+    <color name="md_outline">#2B2F3A</color>
+    <color name="md_ripple">#1AFFFFFF</color>
 </resources>

@@ -5,15 +5,30 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <!-- Оставляем классический Spinner, чтобы не править код -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ингредиент"
+        android:textStyle="bold"
+        android:paddingBottom="4dp"/>
+
     <Spinner
         android:id="@+id/spIngredient"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <EditText
-        android:id="@+id/etQty"
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/TextInput.Outlined"
         android:hint="Количество на 1 порцию"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal" />
+        android:layout_marginTop="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etQty"
+            android:inputType="numberDecimal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>

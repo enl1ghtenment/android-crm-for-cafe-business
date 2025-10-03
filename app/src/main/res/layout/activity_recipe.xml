@@ -8,7 +8,8 @@
         android:id="@+id/rvRecipe"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="12dp" />
+        android:padding="12dp"
+        android:clipToPadding="false"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddIngredientToRecipe"
@@ -20,3 +21,4 @@
         app:layout_anchorGravity="bottom|end"
         android:layout_margin="16dp"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+

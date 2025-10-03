@@ -1,32 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:padding="12dp"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <!-- Поиск по продажам -->
-    <EditText
-        android:id="@+id/etSearchSales"
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/TextInput.Outlined"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Поиск (дата/сумма)"
-        android:inputType="text"
-        android:imeOptions="actionSearch"
-        android:padding="8dp" />
+        app:startIconDrawable="@android:drawable/ic_menu_search">
 
-    <LinearLayout
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:orientation="horizontal" android:gravity="center" android:paddingTop="8dp">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etSearchSales"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionSearch"
+            android:inputType="text"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/btnDay" android:text="День"
-            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
-        <Button
-            android:id="@+id/btnWeek" android:text="Неделя"
-            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
-        <Button
-            android:id="@+id/btnMonth" android:text="Месяц"
-            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
-    </LinearLayout>
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/groupPeriod"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        app:singleSelection="true">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDay" style="@style/Btn.Outlined"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:text="День"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnWeek" style="@style/Btn.Outlined"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:text="Неделя"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMonth" style="@style/Btn.Outlined"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:text="Месяц"/>
+    </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <TextView
         android:id="@+id/tvSummary"
@@ -36,5 +52,6 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSales"
         android:layout_width="match_parent" android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" android:clipToPadding="false"/>
 </LinearLayout>
+
