@@ -8,38 +8,56 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.ostapenko.crm.R;
 import com.ostapenko.crm.entity.Ingredient;
-import com.ostapenko.crm.entity.Product;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.VH> {
 
     public interface Listener { void onClick(Ingredient i); }
 
-    private final List<Ingredient> data = new ArrayList<>();
     private final List<Ingredient> all = new ArrayList<>();
-
+    private final List<Ingredient> data = new ArrayList<>();
     private final Listener listener;
+
+    // текущий поисковый запрос (чтобы сохранялся после submit)
+    private String currentQuery = "";
 
     public IngredientAdapter(Listener listener) { this.listener = listener; }
 
+    /** Полная замена списка из БД */
     public void submit(List<Ingredient> items) {
-        data.clear();
-        if (items != null) data.addAll(items);
-        notifyDataSetChanged();
+        all.clear();
+        if (items != null) all.addAll(items);
+        applyFilter(); // пере-применяем текущий запрос
     }
 
+    /** Внешний вызов из TextWatcher */
     public void filter(String q) {
+        currentQuery = (q == null) ? "" : q.trim().toLowerCase(Locale.getDefault());
+        applyFilter();
+    }
+
+    /** Внутренний пересчёт data из all по currentQuery */
+    private void applyFilter() {
         data.clear();
-        if (q == null || q.trim().isEmpty()) {
+        if (currentQuery.isEmpty()) {
             data.addAll(all);
         } else {
-            String s = q.toLowerCase();
             for (Ingredient i : all) {
-                String name = i.name == null ? "" : i.name.toLowerCase();
-                String unit = i.unit == null ? "" : i.unit.toLowerCase();
-                if (name.contains(s) || unit.contains(s)) data.add(i);
+                String name = i.name == null ? "" : i.name.toLowerCase(Locale.getDefault());
+                String unit = i.unit == null ? "" : i.unit.toLowerCase(Locale.getDefault());
+                // Дополнительно пусть ищет по числам (остаток/цена) — удобно
+                String stock = String.valueOf(i.stock).toLowerCase(Locale.getDefault());
+                String price = String.valueOf(i.price).toLowerCase(Locale.getDefault());
+
+                if (name.contains(currentQuery) ||
+                        unit.contains(currentQuery) ||
+                        stock.contains(currentQuery) ||
+                        price.contains(currentQuery)) {
+                    data.add(i);
+                }
             }
         }
         notifyDataSetChanged();
@@ -54,12 +72,10 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.VH
 
     @Override public void onBindViewHolder(@NonNull VH h, int pos) {
         Ingredient i = data.get(pos);
-        h.tvName.setText(i.name);
-        h.tvUnitStock.setText(i.unit + " • " + trim(i.stock));
+        h.tvName.setText(i.name == null ? "(без названия)" : i.name);
+        h.tvUnitStock.setText((i.unit == null ? "" : i.unit) + " • " + trim(i.stock));
         h.tvPrice.setText("₴" + trim(i.price) + " / ед.");
-        h.itemView.setOnClickListener(v -> {
-            if (listener != null) listener.onClick(i);
-        });
+        h.itemView.setOnClickListener(v -> { if (listener != null) listener.onClick(i); });
     }
 
     @Override public int getItemCount() { return data.size(); }
@@ -80,4 +96,3 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.VH
         return s;
     }
 }
-

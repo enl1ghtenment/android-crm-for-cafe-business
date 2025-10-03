@@ -96,10 +96,12 @@ public class SalesActivity extends AppCompatActivity {
     private void loadRange(Date from, Date to) {
         io.execute(() -> {
             try {
-                List<SaleWithUser> list = saleDao.findBetweenWithUser(from, to);
+                // строки продаж
+                List<com.ostapenko.crm.dto.SaleRow> rows = saleDao.findRowsBetween(from, to);
+                // итог по всем чекам за период — оставляем как было
                 double total = saleDao.sumBetween(from, to);
                 runOnUiThread(() -> {
-                    adapter.submit(list);
+                    adapter.submit(rows);
                     tvSummary.setText("Итог: ₴" + total);
                 });
             } catch (Exception e) {
@@ -107,4 +109,6 @@ public class SalesActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }
