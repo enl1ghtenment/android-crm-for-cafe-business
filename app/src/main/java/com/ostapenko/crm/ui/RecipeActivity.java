@@ -14,13 +14,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.ostapenko.crm.R;
+import com.ostapenko.crm.auth.Session;                 // 👈 NEW
 import com.ostapenko.crm.db.AppDatabase;
 import com.ostapenko.crm.db.dao.IngredientDao;
 import com.ostapenko.crm.db.dao.ProductIngredientDao;
 import com.ostapenko.crm.entity.Ingredient;
 import com.ostapenko.crm.entity.ProductIngredient;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,7 +39,8 @@ public class RecipeActivity extends AppCompatActivity implements RecipeAdapter.L
     private ProductIngredientDao recipeDao;
     private IngredientDao ingredientDao;
     private final ExecutorService io = Executors.newSingleThreadExecutor();
-    private final HashMap<Integer, String> ingredientNames = new HashMap<>(); // id -> name
+
+    private boolean readOnly;                              // 👈 NEW
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,23 +49,31 @@ public class RecipeActivity extends AppCompatActivity implements RecipeAdapter.L
         productId = getIntent().getIntExtra(EXTRA_PRODUCT_ID, -1);
         if (productId <= 0) { finish(); return; }
 
+        // 👇 сотрудник — только просмотр, админ — может редактировать
+        readOnly = !"admin".equalsIgnoreCase(new Session(this).role());
+
         AppDatabase db = AppDatabase.getInstance(getApplicationContext());
         recipeDao = db.productIngredientDao();
         ingredientDao = db.ingredientDao();
 
         androidx.recyclerview.widget.RecyclerView rv = findViewById(R.id.rvRecipe);
         rv.setLayoutManager(new LinearLayoutManager(this));
-        // 👇 адаптер уже принимает Listener с onDelete(int rowId)
-        adapter = new RecipeAdapter(this);
+        adapter = new RecipeAdapter(this, readOnly);       // 👈 NEW: передаём флаг
         rv.setAdapter(adapter);
 
-        findViewById(R.id.fabAddIngredientToRecipe).setOnClickListener(v -> showAddRecipeItemDialog());
+        View fab = findViewById(R.id.fabAddIngredientToRecipe);
+        if (readOnly) {
+            fab.setVisibility(View.GONE);                  // 👈 скрыть у сотрудника
+        } else {
+            fab.setVisibility(View.VISIBLE);
+            fab.setOnClickListener(v -> showAddRecipeItemDialog());
+        }
+
         loadData();
     }
 
     private void loadData() {
         io.execute(() -> {
-            // 👇 теперь берём JOIN-представление
             List<com.ostapenko.crm.dto.RecipeItemView> recipe = recipeDao.getRecipeView(productId);
             runOnUiThread(() -> adapter.submit(recipe));
         });
@@ -115,6 +124,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeAdapter.L
 
     // ==== RecipeAdapter.Listener ====
     @Override public void onDelete(int rowId) {
+        if (readOnly) return;                               // защита от случайных вызовов
         io.execute(() -> {
             recipeDao.deleteRow(rowId);
             loadData();

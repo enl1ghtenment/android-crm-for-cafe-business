@@ -22,7 +22,7 @@ import com.ostapenko.crm.entity.*;
                 SaleItem.class,
                 User.class
         },
-        version = 3,                 // поднимай номер, когда меняешь схему
+        version = 4,                 // поднимай номер, когда меняешь схему
         exportSchema = true
 )
 @TypeConverters({Converters.class})
@@ -63,6 +63,12 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+    private static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override public void migrate(@NonNull SupportSQLiteDatabase db) {
+            db.execSQL("ALTER TABLE sales ADD COLUMN sellerId INTEGER");
+        }
+    };
+
     public static AppDatabase getInstance(Context context) {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
@@ -72,7 +78,7 @@ public abstract class AppDatabase extends RoomDatabase {
                                     AppDatabase.class,
                                     "crm.db")
                             // ВАЖНО: больше не трогаем данные при смене схемы
-                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
                             // создадим дефолтного админа при первом создании БД
                             .addCallback(new Callback() {
                                 @Override

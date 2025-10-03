@@ -37,23 +37,19 @@ public class SalesService {
     /** Продажа qty штук товара productId по total сумме (на уровне UI ты уже знаешь цену) */
     @WorkerThread
     @Transaction
-    public void sell(int productId, int qty, double subtotal, double saleTotal) {
-        // 1) проверка остатков
+    public void sell(int productId, int qty, double subtotal, double saleTotal, Integer sellerId) {
         if (getMaxServings(productId) < qty) {
             throw new IllegalStateException("Недостаточно ингредиентов на складе");
         }
-
-        // 2) списываем ингредиенты
         List<ProductIngredient> recipe = recipeDao.getRecipe(productId);
         for (ProductIngredient r : recipe) {
             double consume = r.quantity * qty;
             ingredientDao.decreaseStock(r.ingredientId, consume);
         }
-
-        // 3) сохраняем продажу и позиции
         Sale sale = new Sale();
         sale.saleDate = new Date();
         sale.total = saleTotal;
+        sale.sellerId = sellerId;
         int saleId = (int) saleDao.insert(sale);
 
         SaleItem item = new SaleItem();
@@ -63,6 +59,7 @@ public class SalesService {
         item.subtotal = subtotal;
         saleItemDao.insert(item);
     }
+
 
     @WorkerThread
     public com.ostapenko.crm.dto.CostEstimate estimateCost(int productId, int qty) {

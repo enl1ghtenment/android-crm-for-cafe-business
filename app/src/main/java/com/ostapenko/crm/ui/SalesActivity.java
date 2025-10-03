@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.ostapenko.crm.R;
 import com.ostapenko.crm.db.AppDatabase;
 import com.ostapenko.crm.db.dao.SaleDao;
+import com.ostapenko.crm.dto.SaleWithUser;
 import com.ostapenko.crm.entity.Sale;
 import java.util.Calendar;
 import java.util.Date;
@@ -95,7 +96,7 @@ public class SalesActivity extends AppCompatActivity {
     private void loadRange(Date from, Date to) {
         io.execute(() -> {
             try {
-                List<Sale> list = saleDao.findBetween(from, to);
+                List<SaleWithUser> list = saleDao.findBetweenWithUser(from, to);
                 double total = saleDao.sumBetween(from, to);
                 runOnUiThread(() -> {
                     adapter.submit(list);

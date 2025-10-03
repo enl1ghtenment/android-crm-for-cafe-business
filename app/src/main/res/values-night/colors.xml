@@ -1,15 +1,21 @@
 <resources>
-    <!-- Тёмный фон по гайдам Material -->
-    <color name="md_bg">#121212</color>
-    <color name="md_surface">#1E1E1E</color>
-    <color name="md_on_bg">#EAEAEA</color>
-    <color name="md_on_surface">#D6D6D6</color>
+    <!-- тёмная палитра -->
+    <color name="bg">#101114</color>
+    <color name="surface">#181A1F</color>
+    <color name="on_surface">#F3F5F9</color>
+    <color name="on_surface_muted">#C7CBD6</color>
+    <color name="outline">#2A2D34</color>
 
-    <!-- Акцент (осветлённый вариант для дарка) -->
-    <color name="md_primary">#7DB2FF</color>
-    <color name="md_on_primary">#0A0A0A</color>
-    <color name="md_secondary">#A9C4FF</color>
-    <color name="md_on_secondary">#0B1624</color>
-    <color name="md_outline">#334155</color>
-    <color name="md_ripple">#33FFFFFF</color>
+    <color name="accent">#6EA1FF</color>
+    <color name="accent_pressed">#5A8BEB</color>
+
+    <!-- ✅ такие же алиасы для night -->
+    <color name="md_primary">#5B9BFF</color>
+    <color name="md_on_primary">#FFFFFF</color>
+    <color name="md_secondary">@color/accent</color>
+    <color name="md_on_secondary">@color/on_surface</color>
+    <color name="md_bg">@color/bg</color>
+    <color name="md_surface">@color/surface</color>
+    <color name="md_on_surface">@color/on_surface</color>
+    <color name="md_outline">@color/outline</color>
 </resources>

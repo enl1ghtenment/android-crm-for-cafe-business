@@ -31,12 +31,9 @@ public class HomeActivity extends AppCompatActivity {
 
         if ("admin".equalsIgnoreCase(session.role())) {
             btnEmployees.setVisibility(View.VISIBLE);
-            btnEmployees.setOnClickListener(v ->
-                    startActivity(new Intent(this, EmployeesActivity.class)));
-
             btnInventory.setVisibility(View.VISIBLE);
-            btnInventory.setOnClickListener(v ->
-                    startActivity(new Intent(this, InventoryActivity.class)));
+            btnEmployees.setOnClickListener(v -> startActivity(new Intent(this, EmployeesActivity.class)));
+            btnInventory.setOnClickListener(v -> startActivity(new Intent(this, InventoryActivity.class)));
         } else {
             btnEmployees.setVisibility(View.GONE);
             btnInventory.setVisibility(View.GONE);
@@ -45,14 +42,6 @@ public class HomeActivity extends AppCompatActivity {
 
         btnProducts.setOnClickListener(v -> startActivity(new Intent(this, ProductsActivity.class)));
         btnSales.setOnClickListener(v -> startActivity(new Intent(this, SalesActivity.class)));
-
-        // доступ к складу только для admin
-        if ("admin".equalsIgnoreCase(session.role())) {
-            btnInventory.setOnClickListener(v -> startActivity(new Intent(this, InventoryActivity.class)));
-            btnInventory.setVisibility(View.VISIBLE);
-        } else {
-            btnInventory.setVisibility(View.GONE);
-        }
 
         btnLogout.setOnClickListener(v -> {
             session.logout();

@@ -6,7 +6,7 @@
     app:cardUseCompatPadding="true"
     app:cardCornerRadius="16dp"
     app:cardBackgroundColor="?attr/colorSurface"
-    app:strokeColor="@color/md_outline"
+    app:strokeColor="@color/outline"
     app:strokeWidth="1dp"
     android:layout_marginBottom="12dp">
 
@@ -28,6 +28,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="₴0.00" />
+
+        <TextView
+            android:id="@+id/tvSeller"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Продавец: Иван Иванов"
+            android:textColor="@color/on_surface_muted"
+            android:paddingTop="4dp"/>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
 

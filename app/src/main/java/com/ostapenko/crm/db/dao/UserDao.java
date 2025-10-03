@@ -29,4 +29,7 @@ public interface UserDao {
             "   OR lastName LIKE :qLike) " +
             "ORDER BY active DESC, role ASC, lastName ASC, firstName ASC")
     List<User> search(String q, String qLike);
+
+    @Query("SELECT * FROM users WHERE id = :id LIMIT 1")
+    User findById(int id);
 }

@@ -77,8 +77,10 @@ public class MainActivity extends AppCompatActivity {
             int maxBefore = (int) Math.floor(maxServings != null ? maxServings : 0);
 
             // 6) Делаем «продажу 3 шт»
+            // 6) Делаем «продажу 3 шт»
             SalesService sales = new SalesService(db);
-            sales.sell(mojito.id, 3, /*subtotal*/ 3 * 120.0, /*saleTotal*/ 3 * 120.0);
+            sales.sell(mojito.id, 3, /*subtotal*/ 3 * 120.0, /*saleTotal*/ 3 * 120.0, /*sellerId*/ null);
+
 
             // 7) Пересчёт остатков
             Double maxServingsAfter = recipeDao.getMaxServings(mojito.id);

@@ -1,52 +1,53 @@
 <resources>
-    <style name="Base.Theme.CRM" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Палитра -->
-        <item name="colorPrimary">@color/md_primary</item>
+    <style name="Theme.CRM" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:colorBackground">@color/bg</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorOutline">@color/outline</item>
+        <item name="colorPrimary">@color/accent</item>
         <item name="colorOnPrimary">@color/md_on_primary</item>
-        <item name="colorSecondary">@color/md_secondary</item>
-        <item name="colorOnSecondary">@color/md_on_secondary</item>
-        <item name="android:colorBackground">@color/md_bg</item>
-        <item name="colorSurface">@color/md_surface</item>
-        <item name="colorOnSurface">@color/md_on_surface</item>
-        <item name="colorOutline">@color/md_outline</item>
 
-        <!-- Кнопки по умолчанию -->
+        <!-- глобальные стили кнопок -->
         <item name="materialButtonStyle">@style/Btn.Filled</item>
         <item name="materialButtonOutlinedStyle">@style/Btn.Outlined</item>
 
-        <!-- Скругления глобально -->
-        <item name="shapeAppearanceSmallComponent">@style/Shape</item>
-        <item name="shapeAppearanceMediumComponent">@style/Shape</item>
-        <item name="shapeAppearanceLargeComponent">@style/Shape</item>
+        <!-- текст по-умолчанию светлый -->
+        <item name="android:textColor">@color/on_surface</item>
     </style>
 
-    <style name="Theme.CRM" parent="Base.Theme.CRM"/>
-
-    <!-- Скруглённые формы -->
-    <style name="Shape" parent="ShapeAppearance.Material3.MediumComponent">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">16dp</item>
-    </style>
-
-    <!-- Кнопки -->
+    <!-- filled -->
     <style name="Btn.Filled" parent="Widget.Material3.Button">
-        <item name="android:minHeight">48dp</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
-    <style name="Btn.Outlined" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="android:minHeight">48dp</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
-    <style name="Btn.Tonal" parent="Widget.Material3.Button.TonalButton">
+        <item name="backgroundTint">@color/accent</item>
+        <item name="android:textColor">@color/md_on_primary</item>
+        <item name="rippleColor">@color/accent_pressed</item>
+        <item name="cornerRadius">24dp</item>
         <item name="android:minHeight">48dp</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <!-- Outlined поля ввода -->
-    <style name="TextInput.Outlined" parent="Widget.Material3.TextInputLayout.OutlinedBox">
-        <item name="boxCornerRadiusTopStart">14dp</item>
-        <item name="boxCornerRadiusTopEnd">14dp</item>
-        <item name="boxCornerRadiusBottomStart">14dp</item>
-        <item name="boxCornerRadiusBottomEnd">14dp</item>
+    <!-- outlined/прозрачная -->
+    <style name="Btn.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeColor">@color/outline</item>
+        <item name="android:textColor">@color/on_surface</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textAllCaps">false</item>
     </style>
+
+    <!-- специальная для "Выйти" светлая -->
+    <style name="Btn.Exit" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/danger_bg</item>
+        <item name="android:textColor">@color/on_surface</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <!-- оверлей для диалогов, чтобы текст был светлым -->
+    <style name="ThemeOverlay.CRM.Dialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="android:textColor">@color/on_surface</item>
+    </style>
+
+    <!-- заглушка, чтобы не падали старые ссылки -->
+    <style name="Shape" />
 </resources>

@@ -12,4 +12,5 @@ public class Sale {
 
     public Date saleDate;    // когда продали
     public double total;     // итоговая сумма
+    public Integer sellerId;
 }

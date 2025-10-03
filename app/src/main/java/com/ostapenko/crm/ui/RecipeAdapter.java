@@ -18,8 +18,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.VH> {
 
     private final List<RecipeItemView> data = new ArrayList<>();
     private final Listener listener;
+    private final boolean readOnly;               // 👈 NEW
 
-    public RecipeAdapter(Listener l) { this.listener = l; }
+    public RecipeAdapter(Listener l, boolean readOnly) {
+        this.listener = l;
+        this.readOnly = readOnly;                 // 👈 NEW
+    }
 
     public void submit(List<RecipeItemView> items) {
         data.clear();
@@ -38,9 +42,17 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.VH> {
         RecipeItemView r = data.get(pos);
         h.tvIngredientName.setText(r.ingredientName + " (" + r.unit + ")");
         h.tvQty.setText(String.valueOf(r.quantity));
-        h.btnDelete.setOnClickListener(v -> {
-            if (listener != null) listener.onDelete(r.id);
-        });
+
+        // 👇 скрываем кнопку удаления в readOnly-режиме
+        if (readOnly) {
+            h.btnDelete.setVisibility(View.GONE);
+            h.btnDelete.setOnClickListener(null);
+        } else {
+            h.btnDelete.setVisibility(View.VISIBLE);
+            h.btnDelete.setOnClickListener(v -> {
+                if (listener != null) listener.onDelete(r.id);
+            });
+        }
     }
 
     @Override public int getItemCount() { return data.size(); }
@@ -51,8 +63,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.VH> {
         VH(@NonNull View v) {
             super(v);
             tvIngredientName = v.findViewById(R.id.tvIngredientName);
-            tvQty = v.findViewById(R.id.tvQty);
-            btnDelete = v.findViewById(R.id.btnDelete);
+            tvQty           = v.findViewById(R.id.tvQty);
+            btnDelete       = v.findViewById(R.id.btnDelete);
         }
     }
 }

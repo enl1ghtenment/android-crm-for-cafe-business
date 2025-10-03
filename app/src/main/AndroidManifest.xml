@@ -24,6 +24,8 @@
         <activity android:name=".ui.ProductsActivity"/>
         <activity android:name=".ui.RecipeActivity"/>
         <activity android:name=".ui.SalesActivity"/>
+        <activity android:name=".ui.EmployeesActivity" />
+        <activity android:name=".ui.EmployeeDetailsActivity" />
     </application>
 
 </manifest>

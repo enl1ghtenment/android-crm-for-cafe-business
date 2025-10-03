@@ -31,10 +31,14 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
     private SaleItemDao saleItemDao;
     private boolean isAdmin;
     private final ExecutorService io = Executors.newSingleThreadExecutor();
+    private Session session;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products);
+
+        session = new Session(this);
+        isAdmin = "admin".equalsIgnoreCase(session.role());
 
         EditText etSearch = findViewById(R.id.etSearchProducts);
         etSearch.addTextChangedListener(new android.text.TextWatcher() {
@@ -134,7 +138,8 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
 
                     io.execute(() -> {
                         try {
-                            salesService.sell(p.id, qtyVal, subtotalVal, subtotalVal);
+                            salesService.sell(p.id, qtyVal, subtotalVal, subtotalVal, session.userId());
+
                             runOnUiThread(() -> {
                                 Toast.makeText(this, "Продано: " + qtyVal + " × " + p.name, Toast.LENGTH_SHORT).show();
                                 loadData(); // обновим «Можно приготовить»
