@@ -74,7 +74,6 @@ public class EmployeeDetailsActivity extends AppCompatActivity {
         });
     }
 
-    // простой адаптер списка продаж (дата + сумма)
     static class SaleShortAdapter extends androidx.recyclerview.widget.RecyclerView.Adapter<VH> {
         private final java.util.ArrayList<SaleWithUser> data = new java.util.ArrayList<>();
         private final SimpleDateFormat fmt = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());

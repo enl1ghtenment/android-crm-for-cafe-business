@@ -50,7 +50,7 @@ public class InventoryActivity extends AppCompatActivity {
 
         RecyclerView rv = findViewById(R.id.rvIngredients);
         rv.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new IngredientAdapter(this::onIngredientClick); // 👈 клик
+        adapter = new IngredientAdapter(this::onIngredientClick);
         rv.setAdapter(adapter);
 
         FloatingActionButton fab = findViewById(R.id.fabAdd);
@@ -110,12 +110,11 @@ public class InventoryActivity extends AppCompatActivity {
                         return;
                     }
 
-                    final double val = delta; // для ламбды
+                    final double val = delta;
                     io.execute(() -> {
                         if (inbound) {
                             ingredientDao.increaseStock(ing.id, val);
                         } else {
-                            // защита от ухода в минус:
                             Ingredient fresh = ingredientDao.findById(ing.id);
                             if (fresh != null && fresh.stock >= val) {
                                 ingredientDao.decreaseStock(ing.id, val);
@@ -138,7 +137,6 @@ public class InventoryActivity extends AppCompatActivity {
         EditText etStock = view.findViewById(R.id.etStock);
         EditText etPrice = view.findViewById(R.id.etPrice);
 
-        // префилл
         etName.setText(ing.name);
         etUnit.setText(ing.unit);
         etStock.setText(String.valueOf(ing.stock));
@@ -156,7 +154,6 @@ public class InventoryActivity extends AppCompatActivity {
                         Toast.makeText(this, "Заполни имя и ед. изм.", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    // обновляем существующий объект
                     Ingredient upd = new Ingredient();
                     upd.id = ing.id;
                     upd.name = name;

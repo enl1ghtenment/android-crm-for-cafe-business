@@ -40,7 +40,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeAdapter.L
     private IngredientDao ingredientDao;
     private final ExecutorService io = Executors.newSingleThreadExecutor();
 
-    private boolean readOnly;                              // 👈 NEW
+    private boolean readOnly;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +49,6 @@ public class RecipeActivity extends AppCompatActivity implements RecipeAdapter.L
         productId = getIntent().getIntExtra(EXTRA_PRODUCT_ID, -1);
         if (productId <= 0) { finish(); return; }
 
-        // 👇 сотрудник — только просмотр, админ — может редактировать
         readOnly = !"admin".equalsIgnoreCase(new Session(this).role());
 
         AppDatabase db = AppDatabase.getInstance(getApplicationContext());
@@ -58,12 +57,12 @@ public class RecipeActivity extends AppCompatActivity implements RecipeAdapter.L
 
         androidx.recyclerview.widget.RecyclerView rv = findViewById(R.id.rvRecipe);
         rv.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new RecipeAdapter(this, readOnly);       // 👈 NEW: передаём флаг
+        adapter = new RecipeAdapter(this, readOnly);
         rv.setAdapter(adapter);
 
         View fab = findViewById(R.id.fabAddIngredientToRecipe);
         if (readOnly) {
-            fab.setVisibility(View.GONE);                  // 👈 скрыть у сотрудника
+            fab.setVisibility(View.GONE);
         } else {
             fab.setVisibility(View.VISIBLE);
             fab.setOnClickListener(v -> showAddRecipeItemDialog());
@@ -122,7 +121,6 @@ public class RecipeActivity extends AppCompatActivity implements RecipeAdapter.L
         });
     }
 
-    // ==== RecipeAdapter.Listener ====
     @Override public void onDelete(int rowId) {
         if (readOnly) return;                               // защита от случайных вызовов
         io.execute(() -> {

@@ -22,7 +22,7 @@ import com.ostapenko.crm.entity.*;
                 SaleItem.class,
                 User.class
         },
-        version = 4,                 // поднимай номер, когда меняешь схему
+        version = 4,
         exportSchema = true
 )
 @TypeConverters({Converters.class})
@@ -37,8 +37,6 @@ public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase INSTANCE;
 
-    // === MIGRATIONS ===
-    // v1 -> v2: добавили таблицу users (минимальный набор полей)
     private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override public void migrate(@NonNull SupportSQLiteDatabase db) {
             db.execSQL(
@@ -55,11 +53,8 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
-    // v2 -> v3: пример на будущее — если что-то докидывали (оставим пустой безопасной миграцией)
     private static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override public void migrate(@NonNull SupportSQLiteDatabase db) {
-            // если нужно — добавляй ALTER TABLE здесь
-            // пример: db.execSQL("ALTER TABLE products ADD COLUMN description TEXT");
         }
     };
 
@@ -77,14 +72,11 @@ public abstract class AppDatabase extends RoomDatabase {
                                     context.getApplicationContext(),
                                     AppDatabase.class,
                                     "crm.db")
-                            // ВАЖНО: больше не трогаем данные при смене схемы
                             .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
-                            // создадим дефолтного админа при первом создании БД
                             .addCallback(new Callback() {
                                 @Override
                                 public void onCreate(@NonNull SupportSQLiteDatabase db) {
                                     super.onCreate(db);
-                                    // пароль ниже — плейнтекст для примера, у тебя может быть hash
                                     db.execSQL(
                                             "INSERT OR IGNORE INTO users(login, passwordHash, role, firstName, lastName, active) " +
                                                     "VALUES('admin','admin','admin','Админ',NULL,1)"

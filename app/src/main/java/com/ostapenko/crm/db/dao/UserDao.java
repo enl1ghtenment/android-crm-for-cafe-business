@@ -21,7 +21,6 @@ public interface UserDao {
     @Query("SELECT * FROM users ORDER BY active DESC, role ASC, lastName ASC, firstName ASC")
     List<User> findAll();
 
-    // Поиск по имени/фамилии/логину (LIKE)
     @Query("SELECT * FROM users " +
             "WHERE (:q IS NULL OR :q = '' " +
             "   OR login LIKE :qLike " +

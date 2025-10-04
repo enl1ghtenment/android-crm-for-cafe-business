@@ -12,12 +12,11 @@ public class User {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
-    public String login;        // уникальный
-    public String passwordHash; // SHA-256
-    public String role;         // "admin" | "employee"
+    public String login;
+    public String passwordHash;
+    public String role;
     public boolean active;
 
-    // 👇 новые поля (необязательные)
-    public String firstName;    // может быть null
-    public String lastName;     // может быть null
+    public String firstName;
+    public String lastName;
 }

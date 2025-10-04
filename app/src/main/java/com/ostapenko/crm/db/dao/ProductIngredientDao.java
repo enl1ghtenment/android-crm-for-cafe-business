@@ -20,11 +20,9 @@ public interface ProductIngredientDao {
     @Query("DELETE FROM product_ingredients WHERE productId = :productId")
     void deleteByProduct(int productId);
 
-    // НУЖЕН для SalesService (не удалять!)
     @Query("SELECT * FROM product_ingredients WHERE productId = :productId")
     List<ProductIngredient> getRecipe(int productId);
 
-    // Для отображения в RecipeActivity (с именем ингредиента)
     @Query("SELECT pi.id AS id, " +
             "       pi.ingredientId AS ingredientId, " +
             "       i.name AS ingredientName, " +
@@ -36,11 +34,9 @@ public interface ProductIngredientDao {
             "ORDER BY i.name")
     List<RecipeItemView> getRecipeView(int productId);
 
-    // Удаление конкретной строки рецепта
     @Query("DELETE FROM product_ingredients WHERE id = :rowId")
     void deleteRow(int rowId);
 
-    // Сколько порций можно приготовить (используется в ProductsActivity)
     @Query("SELECT MIN(i.stock / pi.quantity) " +
             "FROM product_ingredients pi " +
             "JOIN ingredients i ON i.id = pi.ingredientId " +

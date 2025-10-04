@@ -20,26 +20,21 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.VH
     private final List<Ingredient> all = new ArrayList<>();
     private final List<Ingredient> data = new ArrayList<>();
     private final Listener listener;
-
-    // текущий поисковый запрос (чтобы сохранялся после submit)
     private String currentQuery = "";
 
     public IngredientAdapter(Listener listener) { this.listener = listener; }
 
-    /** Полная замена списка из БД */
     public void submit(List<Ingredient> items) {
         all.clear();
         if (items != null) all.addAll(items);
         applyFilter(); // пере-применяем текущий запрос
     }
 
-    /** Внешний вызов из TextWatcher */
     public void filter(String q) {
         currentQuery = (q == null) ? "" : q.trim().toLowerCase(Locale.getDefault());
         applyFilter();
     }
 
-    /** Внутренний пересчёт data из all по currentQuery */
     private void applyFilter() {
         data.clear();
         if (currentQuery.isEmpty()) {
@@ -48,7 +43,6 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.VH
             for (Ingredient i : all) {
                 String name = i.name == null ? "" : i.name.toLowerCase(Locale.getDefault());
                 String unit = i.unit == null ? "" : i.unit.toLowerCase(Locale.getDefault());
-                // Дополнительно пусть ищет по числам (остаток/цена) — удобно
                 String stock = String.valueOf(i.stock).toLowerCase(Locale.getDefault());
                 String price = String.valueOf(i.price).toLowerCase(Locale.getDefault());
 

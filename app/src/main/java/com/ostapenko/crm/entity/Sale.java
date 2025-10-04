@@ -10,7 +10,7 @@ public class Sale {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
-    public Date saleDate;    // когда продали
-    public double total;     // итоговая сумма
+    public Date saleDate;
+    public double total;
     public Integer sellerId;
 }

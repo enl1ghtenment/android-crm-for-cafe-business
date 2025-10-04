@@ -42,7 +42,6 @@ public class SalesActivity extends AppCompatActivity {
     private Date lastFrom, lastTo;
     private boolean isAdmin;
 
-    // 👉 запоминаем последний экспортированный файл, чтобы можно было «Поделиться» из меню
     private @Nullable Uri lastExportUri = null;
 
     private ActivityResultLauncher<String> createCsvLauncher;
@@ -51,14 +50,11 @@ public class SalesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales);
 
-        // Тулбар как ActionBar
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Роль текущего пользователя
         isAdmin = "admin".equalsIgnoreCase(new Session(this).role());
 
-        // Регистрация лаунчера сохранения файла
         createCsvLauncher = registerForActivityResult(
                 new ActivityResultContracts.CreateDocument("text/csv"),
                 this::onCsvUriChosen
@@ -90,10 +86,9 @@ public class SalesActivity extends AppCompatActivity {
         btnWeek.setOnClickListener(v -> loadWeek());
         btnMonth.setOnClickListener(v -> loadMonth());
 
-        loadDay(); // по умолчанию
+        loadDay();
     }
 
-    // Меню тулбара (экспорт/поделиться доступны только админу)
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_sales, menu);
@@ -174,7 +169,6 @@ public class SalesActivity extends AppCompatActivity {
         });
     }
 
-    // ==== Экспорт CSV ====
 
     private void startExport() {
         if (lastFrom == null || lastTo == null) {
@@ -191,13 +185,11 @@ public class SalesActivity extends AppCompatActivity {
             try (OutputStream os = getContentResolver().openOutputStream(uri, "w")) {
                 if (os == null) throw new IllegalStateException("Не удалось открыть поток записи");
 
-                // UTF-8 BOM — чтобы Excel под Windows корректно открыл кириллицу
                 os.write(new byte[]{(byte)0xEF, (byte)0xBB, (byte)0xBF});
 
                 List<SaleRow> rows = saleDao.findRowsBetween(lastFrom, lastTo);
                 double total = saleDao.sumBetween(lastFrom, lastTo);
 
-                // Заголовок
                 String[] header = {
                         "Дата/время", "Чек ID", "Товар", "Кол-во",
                         "Сумма строки", "Продавец", "Логин", "Чек итого"
@@ -224,14 +216,12 @@ public class SalesActivity extends AppCompatActivity {
                     writeCsvLine(os, line);
                 }
 
-                // Итог в конце файла (пустая строка + финальная сумма периода)
                 writeRaw(os, "\n");
                 writeCsvLine(os, new String[]{"", "", "", "", "Итог периода", "", "", trim(total)});
 
-                lastExportUri = uri; // 👈 запомнили для пункта меню «Поделиться»
+                lastExportUri = uri;
                 runOnUiThread(() -> {
                     Toast.makeText(this, "Экспортирован CSV-файл", Toast.LENGTH_LONG).show();
-                    // Сразу предложим поделиться
                     shareCsv(uri);
                 });
             } catch (Exception e) {
@@ -240,18 +230,14 @@ public class SalesActivity extends AppCompatActivity {
         });
     }
 
-    // ==== Поделиться CSV через системный шэринг ====
-
     private void shareCsv(@NonNull Uri uri) {
         try {
             android.content.Intent send = new android.content.Intent(android.content.Intent.ACTION_SEND);
             send.setType("text/csv");
             send.putExtra(android.content.Intent.EXTRA_STREAM, uri);
-            // Дополнительно можно добавить тему/сообщение
             send.putExtra(android.content.Intent.EXTRA_SUBJECT, "Экспорт продаж");
             send.putExtra(android.content.Intent.EXTRA_TEXT, "Статистика продаж в CSV за выбранный период.");
 
-            // Очень важно: даём получателю временный доступ к файлу
             send.addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
             startActivity(android.content.Intent.createChooser(send, "Поделиться CSV"));
@@ -261,7 +247,6 @@ public class SalesActivity extends AppCompatActivity {
     }
 
     private void writeCsvLine(OutputStream os, String[] cells) throws Exception {
-        // Разделитель — ';' (в ряде локалей Excel ожидает именно его)
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < cells.length; i++) {
             if (i > 0) sb.append(';');

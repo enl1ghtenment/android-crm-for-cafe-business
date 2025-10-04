@@ -19,12 +19,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.VH> {
         void onSell(Product p);
         void onBindForServings(Product p, TextView tvServings);
         void onCost(Product p);
-        void onDelete(Product p); // вызываем только если админ
+        void onDelete(Product p);
     }
 
     private final List<Product> data = new ArrayList<>();
     private final Listener listener;
-    private final boolean canDelete; // 👈 признак «админ?»
+    private final boolean canDelete;
 
     private final List<Product> all = new ArrayList<>();
 
@@ -57,7 +57,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.VH> {
         h.btnCost.setOnClickListener(v -> { if (listener != null) listener.onCost(p); });
         h.btnSell.setOnClickListener(v -> { if (listener != null) listener.onSell(p); });
 
-        // 👇 длинное нажатие на карточке — удаление ТОЛЬКО если админ
         if (canDelete) {
             h.itemView.setOnLongClickListener(v -> {
                 if (listener != null) listener.onDelete(p);

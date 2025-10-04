@@ -131,7 +131,6 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
                         return;
                     }
 
-                    // 👇 финальные значения для использования в ламбде
                     final int qtyVal = parsedQty;
                     final double priceVal = parsedPrice;
                     final double subtotalVal = qtyVal * priceVal;
@@ -142,7 +141,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
 
                             runOnUiThread(() -> {
                                 Toast.makeText(this, "Продано: " + qtyVal + " × " + p.name, Toast.LENGTH_SHORT).show();
-                                loadData(); // обновим «Можно приготовить»
+                                loadData();
                             });
                         } catch (Exception e) {
                             runOnUiThread(() -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show());

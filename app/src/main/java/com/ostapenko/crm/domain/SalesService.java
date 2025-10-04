@@ -26,7 +26,6 @@ public class SalesService {
         this.saleItemDao = db.saleItemDao();
     }
 
-    /** Сколько порций можно сделать из текущих остатков */
     @WorkerThread
     public int getMaxServings(int productId) {
         Double m = recipeDao.getMaxServings(productId);
@@ -34,7 +33,6 @@ public class SalesService {
         return (int)Math.floor(m);
     }
 
-    /** Продажа qty штук товара productId по total сумме (на уровне UI ты уже знаешь цену) */
     @WorkerThread
     @Transaction
     public void sell(int productId, int qty, double subtotal, double saleTotal, Integer sellerId) {
@@ -65,11 +63,9 @@ public class SalesService {
     public com.ostapenko.crm.dto.CostEstimate estimateCost(int productId, int qty) {
         if (qty <= 0) throw new IllegalArgumentException("qty must be > 0");
 
-        // 1) сколько вообще можем сделать из остатков — пригодится для предупреждения
         Double m = recipeDao.getMaxServings(productId);
         int max = (m == null) ? 0 : (int) Math.floor(m);
 
-        // 2) строки для расчёта
         java.util.List<com.ostapenko.crm.dto.CostRow> rows = recipeDao.getCostRows(productId);
 
         com.ostapenko.crm.dto.CostEstimate result = new com.ostapenko.crm.dto.CostEstimate();

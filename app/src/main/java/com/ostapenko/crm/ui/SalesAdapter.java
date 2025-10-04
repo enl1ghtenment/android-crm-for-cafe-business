@@ -33,12 +33,10 @@
             SaleRow r = data.get(position);
 
             h.tvDate.setText(df.format(r.saleDate));
-            h.tvTotal.setText("₴" + trim(r.subtotal)); // показываем сумму по строке (а не общий total всего чека)
+            h.tvTotal.setText("₴" + trim(r.subtotal));
 
-            // что продали
             h.tvProduct.setText(r.productName + " × " + r.quantity);
 
-            // кто продал
             String seller = (r.firstName != null && !r.firstName.isEmpty())
                     ? r.firstName + (r.lastName == null ? "" : " " + r.lastName)
                     : (r.login != null && !r.login.isEmpty())

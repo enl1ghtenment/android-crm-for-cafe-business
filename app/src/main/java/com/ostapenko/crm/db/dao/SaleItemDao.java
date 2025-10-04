@@ -15,7 +15,6 @@ public interface SaleItemDao {
     @Query("SELECT * FROM sale_items WHERE saleId = :saleId")
     List<SaleItem> findBySale(int saleId);
 
-    // 👇 добавь это
     @Query("SELECT COUNT(*) FROM sale_items WHERE productId = :productId")
     int countByProduct(int productId);
 }

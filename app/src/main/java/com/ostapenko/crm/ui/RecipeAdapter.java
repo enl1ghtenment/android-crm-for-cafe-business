@@ -18,11 +18,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.VH> {
 
     private final List<RecipeItemView> data = new ArrayList<>();
     private final Listener listener;
-    private final boolean readOnly;               // 👈 NEW
+    private final boolean readOnly;
 
     public RecipeAdapter(Listener l, boolean readOnly) {
         this.listener = l;
-        this.readOnly = readOnly;                 // 👈 NEW
+        this.readOnly = readOnly;
     }
 
     public void submit(List<RecipeItemView> items) {
@@ -43,7 +43,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.VH> {
         h.tvIngredientName.setText(r.ingredientName + " (" + r.unit + ")");
         h.tvQty.setText(String.valueOf(r.quantity));
 
-        // 👇 скрываем кнопку удаления в readOnly-режиме
         if (readOnly) {
             h.btnDelete.setVisibility(View.GONE);
             h.btnDelete.setOnClickListener(null);

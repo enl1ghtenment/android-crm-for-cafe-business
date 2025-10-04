@@ -25,11 +25,9 @@ public interface IngredientDao {
     @Query("SELECT * FROM ingredients WHERE id = :id")
     Ingredient findById(int id);
 
-    // уменьшить остаток (используем в продаже)
     @Query("UPDATE ingredients SET stock = stock - :delta WHERE id = :ingredientId")
     void decreaseStock(int ingredientId, double delta);
 
-    // подсветка «скоро закончится»
     @Query("SELECT * FROM ingredients WHERE stock <= :threshold ORDER BY stock ASC")
     List<Ingredient> findLowStock(double threshold);
 

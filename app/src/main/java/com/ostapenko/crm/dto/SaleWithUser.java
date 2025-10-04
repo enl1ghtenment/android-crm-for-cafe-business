@@ -7,7 +7,7 @@ public class SaleWithUser {
     public Date saleDate;
     public double total;
 
-    public Integer sellerId;      // может быть null
+    public Integer sellerId;
     public String firstName;
     public String lastName;
     public String login;

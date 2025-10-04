@@ -34,7 +34,6 @@ public class LoginActivity extends AppCompatActivity {
 
         userDao = AppDatabase.getInstance(getApplicationContext()).userDao();
 
-        // seed: если нет ни одного активного админа — создадим admin/admin
         io.execute(() -> {
             if (userDao.countActiveAdmins() == 0) {
                 User u = new User();

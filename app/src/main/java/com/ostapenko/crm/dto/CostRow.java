@@ -4,6 +4,6 @@ public class CostRow {
     public int ingredientId;
     public String ingredientName;
     public String unit;
-    public double pricePerUnit;     // цена за 1 единицу (из таблицы ingredients.price)
+    public double pricePerUnit;
     public double quantityPerItem;  // расход на 1 товар
 }
