@@ -91,7 +91,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeAdapter.L
                 ArrayAdapter<String> ad = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, display);
                 sp.setAdapter(ad);
 
-                new AlertDialog.Builder(this)
+                new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
                         .setTitle("Добавить в рецепт")
                         .setView(view)
                         .setPositiveButton("Сохранить", (d, w) -> {

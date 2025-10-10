@@ -77,7 +77,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
         EditText etName = view.findViewById(R.id.etName);
         EditText etDesc = view.findViewById(R.id.etDesc);
 
-        new AlertDialog.Builder(this)
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
                 .setTitle("Добавить товар")
                 .setView(view)
                 .setPositiveButton("Сохранить", (d, w) -> {
@@ -117,7 +117,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
         EditText etQty = view.findViewById(R.id.etQty);
         EditText etPrice = view.findViewById(R.id.etPrice);
 
-        new AlertDialog.Builder(this)
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
                 .setTitle("Продать: " + p.name)
                 .setView(view)
                 .setPositiveButton("OK", (d, w) -> {
@@ -157,7 +157,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
         View view = getLayoutInflater().inflate(R.layout.dialog_estimate_qty, null, false);
         EditText etQty = view.findViewById(R.id.etQty);
 
-        new AlertDialog.Builder(this)
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
                 .setTitle("Себестоимость: " + p.name)
                 .setView(view)
                 .setPositiveButton("Рассчитать", (d, w) -> {
@@ -195,7 +195,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
         sb.append("\nИтого себестоимость: ₴").append(trim(est.totalCost)).append("\n");
         sb.append("Доступно из остатков сейчас: ").append(est.maxServingsAvailable).append(" шт.");
 
-        new AlertDialog.Builder(this)
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
                 .setTitle("Себестоимость")
                 .setMessage(sb.toString())
                 .setPositiveButton("OK", null)
@@ -213,7 +213,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
             Toast.makeText(this, "Удаление доступно только администратору", Toast.LENGTH_SHORT).show();
             return;
         }
-        new AlertDialog.Builder(this)
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
                 .setTitle("Удалить товар?")
                 .setMessage("«" + p.name + "» и его рецепт будут удалены. Продажи не трогаем.")
                 .setPositiveButton("Удалить", (d, w) -> doDeleteProduct(p))

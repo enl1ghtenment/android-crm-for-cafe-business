@@ -35,16 +35,21 @@ import java.util.concurrent.Executors;
 
 public class SalesActivity extends AppCompatActivity {
 
+    private enum Mode { DAY, WEEK, MONTH, YEAR }
+
     private SalesAdapter adapter;
     private SaleDao saleDao;
     private final ExecutorService io = Executors.newSingleThreadExecutor();
     private TextView tvSummary;
+    private TextView tvPeriodLabel;
     private Date lastFrom, lastTo;
     private boolean isAdmin;
 
     private @Nullable Uri lastExportUri = null;
 
     private ActivityResultLauncher<String> createCsvLauncher;
+
+    private Mode currentMode = Mode.DAY;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,23 +77,30 @@ public class SalesActivity extends AppCompatActivity {
         saleDao = AppDatabase.getInstance(getApplicationContext()).saleDao();
 
         tvSummary = findViewById(R.id.tvSummary);
+        tvPeriodLabel = findViewById(R.id.tvPeriodLabel);
 
         androidx.recyclerview.widget.RecyclerView rv = findViewById(R.id.rvSales);
         rv.setLayoutManager(new LinearLayoutManager(this));
         adapter = new SalesAdapter();
         rv.setAdapter(adapter);
 
-        Button btnDay = findViewById(R.id.btnDay);
-        Button btnWeek = findViewById(R.id.btnWeek);
+        Button btnDay   = findViewById(R.id.btnDay);
+        Button btnWeek  = findViewById(R.id.btnWeek);
         Button btnMonth = findViewById(R.id.btnMonth);
+        Button btnYear  = findViewById(R.id.btnYear);
+        Button btnPrev  = findViewById(R.id.btnPrevPeriod);
+        Button btnNext  = findViewById(R.id.btnNextPeriod);
 
-        btnDay.setOnClickListener(v -> loadDay());
-        btnWeek.setOnClickListener(v -> loadWeek());
-        btnMonth.setOnClickListener(v -> loadMonth());
+        btnDay.setOnClickListener(v -> { currentMode = Mode.DAY;   goToNow(); });
+        btnWeek.setOnClickListener(v -> { currentMode = Mode.WEEK;  goToNow(); });
+        btnMonth.setOnClickListener(v -> { currentMode = Mode.MONTH; goToNow(); });
+        btnYear.setOnClickListener(v -> { currentMode = Mode.YEAR;  goToNow(); });
 
-        loadDay();
+        btnPrev.setOnClickListener(v -> shiftPeriod(-1));
+        btnNext.setOnClickListener(v -> shiftPeriod(+1));
+
+        goToNow();
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_sales, menu);
@@ -121,36 +133,172 @@ public class SalesActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void loadDay() {
-        Date now = new Date();
+    private void goToNow() {
+        Calendar now = Calendar.getInstance();
+        switch (currentMode) {
+            case DAY   -> setDay(now.getTime());
+            case WEEK  -> setWeek(now);
+            case MONTH -> setMonth(now);
+            case YEAR  -> setYear(now);
+        }
+    }
+    private void shiftPeriod(int delta) {
+        if (lastFrom == null || lastTo == null) return;
         Calendar cal = Calendar.getInstance();
-        cal.setTime(now);
-        cal.set(Calendar.HOUR_OF_DAY, 0); cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0); cal.set(Calendar.MILLISECOND, 0);
-        Date from = cal.getTime();
-
-        cal.set(Calendar.HOUR_OF_DAY, 23); cal.set(Calendar.MINUTE, 59);
-        cal.set(Calendar.SECOND, 59); cal.set(Calendar.MILLISECOND, 999);
-        Date to = cal.getTime();
-
-        loadRange(from, to);
+        switch (currentMode) {
+            case DAY -> {
+                cal.setTime(lastFrom);
+                cal.add(Calendar.DATE, delta);
+                setDay(cal.getTime());
+            }
+            case WEEK -> {
+                cal.setTime(lastFrom);
+                cal.add(Calendar.DATE, 7 * delta);
+                Date from = startOfDay(cal.getTime());
+                cal.add(Calendar.DATE, 6);
+                Date to = endOfDay(cal.getTime());
+                loadRange(from, to);
+                updatePeriodLabelWeek(from);
+            }
+            case MONTH -> {
+                cal.setTime(lastFrom);
+                cal.add(Calendar.MONTH, delta);
+                Date from = startOfMonth(cal);
+                Date to   = endOfMonth(cal);
+                loadRange(from, to);
+                updatePeriodLabelMonth(from);
+            }
+            case YEAR -> {
+                cal.setTime(lastFrom);
+                cal.add(Calendar.YEAR, delta);
+                Date from = startOfYear(cal);
+                Date to   = endOfYear(cal);
+                loadRange(from, to);
+                updatePeriodLabelYear(from);
+            }
+        }
     }
 
-    private void loadWeek() {
-        Calendar cal = Calendar.getInstance();
-        Date to = cal.getTime();
-        cal.add(Calendar.DATE, -7);
-        Date from = cal.getTime();
+    private void setDay(Date day) {
+        Date from = startOfDay(day);
+        Date to   = endOfDay(day);
         loadRange(from, to);
+        tvPeriodLabel.setText(new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(from));
     }
 
-    private void loadMonth() {
-        Calendar cal = Calendar.getInstance();
-        Date to = cal.getTime();
-        cal.add(Calendar.MONTH, -1);
-        Date from = cal.getTime();
+    private void setWeek(Calendar today) {
+        Calendar fromCal = (Calendar) today.clone();
+        fromCal.add(Calendar.DATE, -6);
+        Date from = startOfDay(fromCal.getTime());
+        Date to   = endOfDay(today.getTime());
         loadRange(from, to);
+        updatePeriodLabelWeek(from);
     }
+
+    private void setMonth(Calendar today) {
+        Calendar fromCal = (Calendar) today.clone();
+        fromCal.add(Calendar.MONTH, -1);
+        Date from = startOfDay(fromCal.getTime());
+        Date to   = endOfDay(today.getTime());
+        loadRange(from, to);
+        updatePeriodLabelMonth(from);
+    }
+
+    private void setYear(Calendar today) {
+        Calendar fromCal = (Calendar) today.clone();
+        fromCal.add(Calendar.YEAR, -1);
+        Date from = startOfDay(fromCal.getTime());
+        Date to   = endOfDay(today.getTime());
+        loadRange(from, to);
+        updatePeriodLabelYear(from);
+    }
+
+    private void updatePeriodLabelWeek(Date from) {
+        SimpleDateFormat dLeft  = new SimpleDateFormat("dd MMM", Locale.getDefault());
+        SimpleDateFormat dRight = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+        Calendar c = Calendar.getInstance();
+        c.setTime(from);
+        String left = dLeft.format(from);
+        c.add(Calendar.DATE, 6);
+        String right = dRight.format(c.getTime());
+        tvPeriodLabel.setText(left + " — " + right);
+    }
+
+    private void updatePeriodLabelMonth(Date monthStart) {
+        SimpleDateFormat df = new SimpleDateFormat("LLLL yyyy", new Locale("ru"));
+        tvPeriodLabel.setText(df.format(monthStart));
+    }
+
+    private void updatePeriodLabelYear(Date yearStart) {
+        SimpleDateFormat dfL = new SimpleDateFormat("LLL yyyy", new Locale("ru"));
+        Calendar c = Calendar.getInstance();
+        c.setTime(yearStart);
+        String left = dfL.format(c.getTime());
+        c.add(Calendar.YEAR, 1);
+        c.add(Calendar.MILLISECOND, -1);
+        String right = dfL.format(c.getTime());
+        tvPeriodLabel.setText(left + " — " + right);
+    }
+
+    private Date startOfDay(Date d) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
+    private Date endOfDay(Date d) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MILLISECOND, 999);
+        return cal.getTime();
+    }
+
+    private Date startOfMonth(Calendar c) {
+        Calendar x = (Calendar) c.clone();
+        x.set(Calendar.DAY_OF_MONTH, 1);
+        x.set(Calendar.HOUR_OF_DAY, 0);
+        x.set(Calendar.MINUTE, 0);
+        x.set(Calendar.SECOND, 0);
+        x.set(Calendar.MILLISECOND, 0);
+        return x.getTime();
+    }
+    private Date endOfMonth(Calendar c) {
+        Calendar x = (Calendar) c.clone();
+        x.set(Calendar.DAY_OF_MONTH, x.getActualMaximum(Calendar.DAY_OF_MONTH));
+        x.set(Calendar.HOUR_OF_DAY, 23);
+        x.set(Calendar.MINUTE, 59);
+        x.set(Calendar.SECOND, 59);
+        x.set(Calendar.MILLISECOND, 999);
+        return x.getTime();
+    }
+    private Date startOfYear(Calendar c) {
+        Calendar x = (Calendar) c.clone();
+        x.set(Calendar.MONTH, Calendar.JANUARY);
+        x.set(Calendar.DAY_OF_MONTH, 1);
+        x.set(Calendar.HOUR_OF_DAY, 0);
+        x.set(Calendar.MINUTE, 0);
+        x.set(Calendar.SECOND, 0);
+        x.set(Calendar.MILLISECOND, 0);
+        return x.getTime();
+    }
+    private Date endOfYear(Calendar c) {
+        Calendar x = (Calendar) c.clone();
+        x.set(Calendar.MONTH, Calendar.DECEMBER);
+        x.set(Calendar.DAY_OF_MONTH, 31);
+        x.set(Calendar.HOUR_OF_DAY, 23);
+        x.set(Calendar.MINUTE, 59);
+        x.set(Calendar.SECOND, 59);
+        x.set(Calendar.MILLISECOND, 999);
+        return x.getTime();
+    }
+
 
     private void loadRange(Date from, Date to) {
         lastFrom = from;
@@ -169,10 +317,9 @@ public class SalesActivity extends AppCompatActivity {
         });
     }
 
-
     private void startExport() {
         if (lastFrom == null || lastTo == null) {
-            Toast.makeText(this, "Сначала выбери период (День/Неделя/Месяц)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Сначала выбери период (День/Неделя/Месяц/Год)", Toast.LENGTH_SHORT).show();
             return;
         }
         String fname = "sales_" + new SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(new Date()) + ".csv";
@@ -184,26 +331,24 @@ public class SalesActivity extends AppCompatActivity {
         io.execute(() -> {
             try (OutputStream os = getContentResolver().openOutputStream(uri, "w")) {
                 if (os == null) throw new IllegalStateException("Не удалось открыть поток записи");
-
-                os.write(new byte[]{(byte)0xEF, (byte)0xBB, (byte)0xBF});
+                os.write(new byte[]{(byte)0xEF,(byte)0xBB,(byte)0xBF});
 
                 List<SaleRow> rows = saleDao.findRowsBetween(lastFrom, lastTo);
                 double total = saleDao.sumBetween(lastFrom, lastTo);
 
-                String[] header = {
+                writeCsvLine(os, new String[]{
                         "Дата/время", "Чек ID", "Товар", "Кол-во",
                         "Сумма строки", "Продавец", "Логин", "Чек итого"
-                };
-                writeCsvLine(os, header);
+                });
 
                 SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
 
                 for (SaleRow r : rows) {
-                    String seller =
-                            (r.firstName != null && !r.firstName.isEmpty())
-                                    ? r.firstName + (r.lastName == null ? "" : " " + r.lastName)
-                                    : (r.login != null ? r.login : (r.sellerId == null ? "-" : String.valueOf(r.sellerId)));
-                    String[] line = {
+                    String seller = (r.firstName != null && !r.firstName.isEmpty())
+                            ? r.firstName + (r.lastName == null ? "" : " " + r.lastName)
+                            : (r.login != null ? r.login : (r.sellerId == null ? "-" : String.valueOf(r.sellerId)));
+
+                    writeCsvLine(os, new String[]{
                             df.format(r.saleDate),
                             String.valueOf(r.saleId),
                             nullToEmpty(r.productName),
@@ -212,10 +357,8 @@ public class SalesActivity extends AppCompatActivity {
                             seller,
                             nullToEmpty(r.login),
                             trim(r.saleTotal)
-                    };
-                    writeCsvLine(os, line);
+                    });
                 }
-
                 writeRaw(os, "\n");
                 writeCsvLine(os, new String[]{"", "", "", "", "Итог периода", "", "", trim(total)});
 
@@ -237,9 +380,7 @@ public class SalesActivity extends AppCompatActivity {
             send.putExtra(android.content.Intent.EXTRA_STREAM, uri);
             send.putExtra(android.content.Intent.EXTRA_SUBJECT, "Экспорт продаж");
             send.putExtra(android.content.Intent.EXTRA_TEXT, "Статистика продаж в CSV за выбранный период.");
-
             send.addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
             startActivity(android.content.Intent.createChooser(send, "Поделиться CSV"));
         } catch (Exception e) {
             Toast.makeText(this, "Не удалось поделиться: " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -250,7 +391,7 @@ public class SalesActivity extends AppCompatActivity {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < cells.length; i++) {
             if (i > 0) sb.append(';');
-            sb.append(csvEscape(cells[i]));
+            sb.append(csvEscape(cells[i] == null ? "" : cells[i]));
         }
         sb.append('\n');
         writeRaw(os, sb.toString());
@@ -261,15 +402,13 @@ public class SalesActivity extends AppCompatActivity {
     }
 
     private String csvEscape(String s) {
-        if (s == null) s = "";
         String v = s.replace("\"", "\"\"");
         return "\"" + v + "\"";
     }
 
     private static String trim(double d) {
         String s = String.valueOf(d);
-        if (s.endsWith(".0")) return s.substring(0, s.length()-2);
-        return s;
+        return s.endsWith(".0") ? s.substring(0, s.length()-2) : s;
     }
 
     private static String nullToEmpty(String s) { return s == null ? "" : s; }

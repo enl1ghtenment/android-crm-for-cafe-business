@@ -50,7 +50,46 @@
             android:id="@+id/btnMonth" style="@style/Btn.Outlined"
             android:layout_width="0dp" android:layout_height="wrap_content"
             android:layout_weight="1" android:text="Месяц"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnYear" style="@style/Btn.Outlined"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:text="Год"/>
     </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingTop="6dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPrevPeriod"
+            style="@style/Btn.Outlined"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="«"/>
+
+        <TextView
+            android:id="@+id/tvPeriodLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:textSize="14sp"
+            android:textColor="?attr/colorOnSurface"
+            android:text="Период"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNextPeriod"
+            style="@style/Btn.Outlined"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="»"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tvSummary"

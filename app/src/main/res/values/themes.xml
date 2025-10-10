@@ -1,53 +1,121 @@
 <resources>
-    <style name="Theme.CRM" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:colorBackground">@color/bg</item>
-        <item name="colorSurface">@color/surface</item>
-        <item name="colorOnSurface">@color/on_surface</item>
-        <item name="colorOutline">@color/outline</item>
-        <item name="colorPrimary">@color/accent</item>
-        <item name="colorOnPrimary">@color/md_on_primary</item>
 
-        <!-- глобальные стили кнопок -->
+    <style name="Base.Theme.CRM" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Палитра -->
+        <item name="colorPrimary">@color/md_primary</item>
+        <item name="colorOnPrimary">@color/md_on_primary</item>
+        <item name="colorSecondary">@color/md_secondary</item>
+        <item name="colorOnSecondary">@color/md_on_secondary</item>
+        <item name="android:colorBackground">@color/md_bg</item>
+        <item name="colorSurface">@color/md_surface</item>
+        <item name="colorOnSurface">@android:color/white</item>
+        <item name="colorOutline">@color/md_outline</item>
+
+        <!-- Глобально: кнопки -->
         <item name="materialButtonStyle">@style/Btn.Filled</item>
         <item name="materialButtonOutlinedStyle">@style/Btn.Outlined</item>
 
-        <!-- текст по-умолчанию светлый -->
-        <item name="android:textColor">@color/on_surface</item>
+        <!-- Поля ввода по умолчанию (экраны) -->
+        <item name="textInputStyle">@style/TextInput.Outlined</item>
+        <item name="editTextStyle">@style/EditText.CRM</item>
+
+        <!-- Диалоги -->
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.CRM.Dialog</item>
+
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
-    <!-- filled -->
+    <style name="Theme.CRM" parent="Base.Theme.CRM"/>
+
+    <!-- Кнопки -->
     <style name="Btn.Filled" parent="Widget.Material3.Button">
-        <item name="backgroundTint">@color/accent</item>
-        <item name="android:textColor">@color/md_on_primary</item>
-        <item name="rippleColor">@color/accent_pressed</item>
-        <item name="cornerRadius">24dp</item>
         <item name="android:minHeight">48dp</item>
         <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <!-- outlined/прозрачная -->
     <style name="Btn.Outlined" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="strokeColor">@color/outline</item>
-        <item name="android:textColor">@color/on_surface</item>
-        <item name="cornerRadius">24dp</item>
         <item name="android:minHeight">48dp</item>
         <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <!-- специальная для "Выйти" светлая -->
-    <style name="Btn.Exit" parent="Widget.Material3.Button">
-        <item name="backgroundTint">@color/danger_bg</item>
-        <item name="android:textColor">@color/on_surface</item>
-        <item name="cornerRadius">24dp</item>
-        <item name="android:minHeight">48dp</item>
-        <item name="android:textAllCaps">false</item>
+    <!-- Поля ввода (экраны) -->
+    <style name="TextInput.Outlined" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundMode">outline</item>
+        <item name="boxBackgroundColor">@android:color/transparent</item>
+        <item name="boxStrokeColor">@color/md_outline</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="hintTextColor">@android:color/white</item>
+        <item name="android:textColorHint">@android:color/white</item>
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
     </style>
 
-    <!-- оверлей для диалогов, чтобы текст был светлым -->
+    <style name="EditText.CRM" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColorHint">@android:color/white</item>
+        <item name="android:background">@null</item>
+        <item name="android:backgroundTint">@android:color/transparent</item>
+        <item name="android:textCursorDrawable">@null</item>
+    </style>
+
+    <!-- ===== Диалоговая палитра и стили (день) ===== -->
+    <color name="md_surface_dialog">#F3EDF7</color>
+    <color name="md_on_surface_dialog">#1A1A1A</color>
+
+    <style name="TextInput.Outlined.Dialog" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundMode">outline</item>
+        <item name="boxBackgroundColor">@android:color/transparent</item>
+        <item name="boxStrokeColor">@color/md_outline</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="hintTextColor">@color/md_on_surface_dialog</item>
+        <item name="android:textColorHint">@color/md_on_surface_dialog</item>
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+    </style>
+
+    <style name="EditText.CRM.Dialog" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/md_on_surface_dialog</item>
+        <item name="android:textColorHint">@color/md_on_surface_dialog</item>
+        <item name="android:background">@null</item>
+        <item name="android:backgroundTint">@android:color/transparent</item>
+        <item name="android:textCursorDrawable">@null</item>
+    </style>
+
     <style name="ThemeOverlay.CRM.Dialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
-        <item name="android:textColor">@color/on_surface</item>
+        <item name="colorSurface">@color/md_surface_dialog</item>
+        <item name="colorOnSurface">@color/md_on_surface_dialog</item>
+        <item name="textInputStyle">@style/TextInput.Outlined.Dialog</item>
+        <item name="editTextStyle">@style/EditText.CRM.Dialog</item>
+        <item name="textAppearanceBodyMedium">@style/Dialog.Text</item>
+        <item name="textAppearanceHeadlineSmall">@style/Dialog.Title</item>
     </style>
 
-    <!-- заглушка, чтобы не падали старые ссылки -->
-    <style name="Shape" />
+    <style name="Dialog.Text" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">@color/md_on_surface_dialog</item>
+    </style>
+
+    <style name="Dialog.Title" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textColor">@color/md_on_surface_dialog</item>
+    </style>
+
+    <!-- Алиасы формы/тональные кнопки -->
+    <style name="Shape.Rounded">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+    <style name="Shape" parent="Shape.Rounded" />
+
+    <style name="Btn.Tonal" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
 </resources>

@@ -22,7 +22,7 @@ import com.ostapenko.crm.entity.*;
                 SaleItem.class,
                 User.class
         },
-        version = 4,
+        version = 5,
         exportSchema = true
 )
 @TypeConverters({Converters.class})
@@ -36,6 +36,9 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract UserDao userDao();
 
     private static volatile AppDatabase INSTANCE;
+
+    private static final String ADMIN_HASH_103668 =
+            "c5666cc83d0c96df4ccdbef90aef3f8d65b4aad259bf6ef11ec6214c9281c3b8";
 
     private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override public void migrate(@NonNull SupportSQLiteDatabase db) {
@@ -64,6 +67,28 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+    private static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override public void migrate(@NonNull SupportSQLiteDatabase db) {
+            db.execSQL(
+                    "INSERT OR IGNORE INTO users(login, passwordHash, role, firstName, lastName, active) " +
+                            "VALUES('ostapenko', ?, 'admin', 'Остапенко', NULL, 1)",
+                    new Object[]{ADMIN_HASH_103668}
+            );
+            db.execSQL("UPDATE users SET active = 0 WHERE role = 'admin' AND login <> 'ostapenko'");
+        }
+    };
+
+    private static final Migration MIGRATION_5_6 = new Migration(5, 6) {
+        @Override public void migrate(@NonNull SupportSQLiteDatabase db) {
+            db.execSQL(
+                    "INSERT OR IGNORE INTO users(login, passwordHash, role, firstName, lastName, active) " +
+                            "VALUES('admin', ?, 'admin', 'Админ', NULL, 1)",
+                    new Object[]{ADMIN_HASH_103668}
+            );
+            db.execSQL("UPDATE users SET active = 0 WHERE role = 'admin' AND login <> 'admin'");
+        }
+    };
+
     public static AppDatabase getInstance(Context context) {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
@@ -72,14 +97,20 @@ public abstract class AppDatabase extends RoomDatabase {
                                     context.getApplicationContext(),
                                     AppDatabase.class,
                                     "crm.db")
-                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+                            .addMigrations(
+                                    MIGRATION_1_2,
+                                    MIGRATION_2_3,
+                                    MIGRATION_3_4,
+                                    MIGRATION_4_5,
+                                    MIGRATION_5_6
+                            )
                             .addCallback(new Callback() {
-                                @Override
-                                public void onCreate(@NonNull SupportSQLiteDatabase db) {
+                                @Override public void onCreate(@NonNull SupportSQLiteDatabase db) {
                                     super.onCreate(db);
                                     db.execSQL(
                                             "INSERT OR IGNORE INTO users(login, passwordHash, role, firstName, lastName, active) " +
-                                                    "VALUES('admin','admin','admin','Админ',NULL,1)"
+                                                    "VALUES(?, ?, 'admin', ?, NULL, 1)",
+                                            new Object[]{"admin", ADMIN_HASH_103668, "Админ"}
                                     );
                                 }
                             })

@@ -78,7 +78,7 @@ public class InventoryActivity extends AppCompatActivity {
 
     private void onIngredientClick(Ingredient ing) {
         String[] actions = {"Приход", "Списание", "Редактировать"};
-        new AlertDialog.Builder(this)
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
                 .setTitle(ing.name + " (" + ing.unit + " • " + trim(ing.stock) + ")")
                 .setItems(actions, (d, which) -> {
                     if (which == 0) showAdjustDialog(ing, true);
@@ -99,7 +99,7 @@ public class InventoryActivity extends AppCompatActivity {
                 ? "Введите сколько добавить к остатку"
                 : "Введите сколько списать с остатка");
 
-        new AlertDialog.Builder(this)
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
                 .setView(view)
                 .setPositiveButton("Сохранить", (d, w) -> {
                     double delta;
@@ -142,7 +142,7 @@ public class InventoryActivity extends AppCompatActivity {
         etStock.setText(String.valueOf(ing.stock));
         etPrice.setText(String.valueOf(ing.price));
 
-        new AlertDialog.Builder(this)
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
                 .setTitle("Редактировать ингредиент")
                 .setView(view)
                 .setPositiveButton("Сохранить", (d, w) -> {
@@ -177,7 +177,7 @@ public class InventoryActivity extends AppCompatActivity {
         EditText etStock = view.findViewById(R.id.etStock);
         EditText etPrice = view.findViewById(R.id.etPrice);
 
-        new AlertDialog.Builder(this)
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
                 .setTitle("Добавить ингредиент")
                 .setView(view)
                 .setPositiveButton("Сохранить", (d, w) -> {

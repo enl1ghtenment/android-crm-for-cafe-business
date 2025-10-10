@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.ostapenko.crm.R;
@@ -71,7 +70,11 @@ public class EmployeesActivity extends AppCompatActivity {
     }
 
     private void showEditDialog(@Nullable User existing) {
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_employee_edit, null, false);
+        // ВАЖНО: инфлейтим через контекст билдера
+        var builder = new com.google.android.material.dialog.MaterialAlertDialogBuilder(this);
+        View view = LayoutInflater.from(builder.getContext())
+                .inflate(R.layout.dialog_employee_edit, null, false);
+
         EditText etFirst = view.findViewById(R.id.etFirst);
         EditText etLast = view.findViewById(R.id.etLast);
         EditText etLogin = view.findViewById(R.id.etLogin);
@@ -83,7 +86,7 @@ public class EmployeesActivity extends AppCompatActivity {
             etFirst.setText(existing.firstName);
             etLast.setText(existing.lastName);
             etLogin.setText(existing.login);
-            etLogin.setEnabled(false); // логин менять не даём
+            etLogin.setEnabled(false);
             etRole.setText(existing.role);
             etActive.setText(existing.active ? "1" : "0");
         } else {
@@ -91,7 +94,7 @@ public class EmployeesActivity extends AppCompatActivity {
             etRole.setText("employee");
         }
 
-        new AlertDialog.Builder(this)
+        builder
                 .setTitle(existing == null ? "Новый сотрудник" : "Редактировать сотрудника")
                 .setView(view)
                 .setPositiveButton("Сохранить", (d,w) -> {
