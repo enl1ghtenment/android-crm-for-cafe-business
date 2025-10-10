@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <!-- Оставляем классический Spinner, чтобы не править код -->
+    <!-- подпись к спиннеру -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Ингредиент"
         android:textStyle="bold"
-        android:paddingBottom="4dp"/>
+        android:paddingBottom="4dp"
+        android:textColor="?attr/colorOnSurface"/>
 
     <Spinner
         android:id="@+id/spIngredient"
@@ -19,16 +21,21 @@
         android:layout_height="wrap_content" />
 
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/TextInput.Outlined"
+        style="?attr/textInputStyle"
         android:hint="Количество на 1 порцию"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        app:hintTextColor="?attr/colorOnSurface">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etQty"
+            style="?attr/editTextStyle"
             android:inputType="numberDecimal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="?attr/colorOnSurface"/>
     </com.google.android.material.textfield.TextInputLayout>
+
 </LinearLayout>

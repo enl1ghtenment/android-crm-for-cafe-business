@@ -10,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -65,7 +64,6 @@ public class InventoryActivity extends AppCompatActivity {
             @Override public void afterTextChanged(Editable s) {}
         });
 
-
         loadData();
     }
 
@@ -89,7 +87,10 @@ public class InventoryActivity extends AppCompatActivity {
     }
 
     private void showAdjustDialog(Ingredient ing, boolean inbound) {
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_adjust_stock, null, false);
+        var builder = new com.google.android.material.dialog.MaterialAlertDialogBuilder(this);
+        View view = LayoutInflater.from(builder.getContext())
+                .inflate(R.layout.dialog_adjust_stock, null, false);
+
         TextView tvTitle = view.findViewById(R.id.tvTitle);
         TextView tvHint = view.findViewById(R.id.tvHint);
         EditText etDelta = view.findViewById(R.id.etDelta);
@@ -99,7 +100,7 @@ public class InventoryActivity extends AppCompatActivity {
                 ? "Введите сколько добавить к остатку"
                 : "Введите сколько списать с остатка");
 
-        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+        builder
                 .setView(view)
                 .setPositiveButton("Сохранить", (d, w) -> {
                     double delta;
@@ -131,7 +132,10 @@ public class InventoryActivity extends AppCompatActivity {
     }
 
     private void showEditDialog(Ingredient ing) {
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_add_ingredient, null, false);
+        var builder = new com.google.android.material.dialog.MaterialAlertDialogBuilder(this);
+        View view = LayoutInflater.from(builder.getContext())
+                .inflate(R.layout.dialog_add_ingredient, null, false);
+
         EditText etName = view.findViewById(R.id.etName);
         EditText etUnit = view.findViewById(R.id.etUnit);
         EditText etStock = view.findViewById(R.id.etStock);
@@ -142,7 +146,7 @@ public class InventoryActivity extends AppCompatActivity {
         etStock.setText(String.valueOf(ing.stock));
         etPrice.setText(String.valueOf(ing.price));
 
-        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+        builder
                 .setTitle("Редактировать ингредиент")
                 .setView(view)
                 .setPositiveButton("Сохранить", (d, w) -> {
@@ -171,13 +175,16 @@ public class InventoryActivity extends AppCompatActivity {
     }
 
     private void showAddDialog() {
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_add_ingredient, null, false);
+        var builder = new com.google.android.material.dialog.MaterialAlertDialogBuilder(this);
+        View view = LayoutInflater.from(builder.getContext())
+                .inflate(R.layout.dialog_add_ingredient, null, false);
+
         EditText etName = view.findViewById(R.id.etName);
         EditText etUnit = view.findViewById(R.id.etUnit);
         EditText etStock = view.findViewById(R.id.etStock);
         EditText etPrice = view.findViewById(R.id.etPrice);
 
-        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+        builder
                 .setTitle("Добавить ингредиент")
                 .setView(view)
                 .setPositiveButton("Сохранить", (d, w) -> {

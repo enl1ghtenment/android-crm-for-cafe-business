@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="12dp"
@@ -15,18 +16,22 @@
         app:titleTextColor="?attr/colorOnSurface" />
 
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/TextInput.Outlined"
+        style="?attr/textInputStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Поиск (дата/сумма)"
-        app:startIconDrawable="@android:drawable/ic_menu_search">
+        app:startIconDrawable="@android:drawable/ic_menu_search"
+        app:hintTextColor="?attr/colorOnSurface">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etSearchSales"
+            style="?attr/editTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionSearch"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="?attr/colorOnSurface"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButtonToggleGroup
@@ -37,24 +42,36 @@
         app:singleSelection="true">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnDay" style="@style/Btn.Outlined"
-            android:layout_width="0dp" android:layout_height="wrap_content"
-            android:layout_weight="1" android:text="День"/>
+            android:id="@+id/btnDay"
+            style="@style/Btn.Outlined"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="День"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnWeek" style="@style/Btn.Outlined"
-            android:layout_width="0dp" android:layout_height="wrap_content"
-            android:layout_weight="1" android:text="Неделя"/>
+            android:id="@+id/btnWeek"
+            style="@style/Btn.Outlined"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Неделя"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnMonth" style="@style/Btn.Outlined"
-            android:layout_width="0dp" android:layout_height="wrap_content"
-            android:layout_weight="1" android:text="Месяц"/>
+            android:id="@+id/btnMonth"
+            style="@style/Btn.Outlined"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Месяц"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnYear" style="@style/Btn.Outlined"
-            android:layout_width="0dp" android:layout_height="wrap_content"
-            android:layout_weight="1" android:text="Год"/>
+            android:id="@+id/btnYear"
+            style="@style/Btn.Outlined"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Год"/>
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <LinearLayout
@@ -93,12 +110,17 @@
 
     <TextView
         android:id="@+id/tvSummary"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="Итог: ₴0.00" android:textSize="16sp" android:padding="8dp"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Итог: ₴0.00"
+        android:textSize="16sp"
+        android:padding="8dp"
+        android:textColor="?attr/colorOnSurface"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSales"
-        android:layout_width="match_parent" android:layout_height="0dp"
-        android:layout_weight="1" android:clipToPadding="false"/>
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"/>
 </LinearLayout>
-

@@ -6,7 +6,7 @@
     app:cardUseCompatPadding="true"
     app:cardCornerRadius="16dp"
     app:cardBackgroundColor="?attr/colorSurface"
-    app:strokeColor="@color/outline"
+    app:strokeColor="?attr/colorOutline"
     app:strokeWidth="1dp"
     android:layout_marginBottom="12dp">
 
@@ -22,6 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:textStyle="bold"
+            android:textColor="?attr/colorOnSurface"
             android:text="Ингредиент" />
 
         <TextView
@@ -29,6 +30,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="?attr/colorOnSurfaceSecondary"
             android:text="0.0" />
 
         <com.google.android.material.button.MaterialButton
@@ -40,4 +42,3 @@
             android:textAllCaps="false" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
-

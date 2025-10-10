@@ -4,7 +4,7 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnProducts" style="@style/Btn.Filled"
+        android:id="@+id/btnProducts" style="@style/Btn.Outlined"
         android:text="Товар" android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

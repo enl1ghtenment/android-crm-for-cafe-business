@@ -11,6 +11,8 @@
         <item name="colorOnSurface">@android:color/white</item>
         <item name="colorOutline">@color/md_outline</item>
 
+        <item name="colorOnSurfaceSecondary">#CCFFFFFF</item>
+
         <!-- Глобально: кнопки -->
         <item name="materialButtonStyle">@style/Btn.Filled</item>
         <item name="materialButtonOutlinedStyle">@style/Btn.Outlined</item>

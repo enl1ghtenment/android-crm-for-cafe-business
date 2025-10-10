@@ -7,7 +7,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.ostapenko.crm.R;
@@ -49,7 +48,6 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
             @Override public void afterTextChanged(android.text.Editable s) {}
         });
 
-
         AppDatabase db = AppDatabase.getInstance(getApplicationContext());
         productDao = db.productDao();
         recipeDao = db.productIngredientDao();
@@ -73,11 +71,14 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
     }
 
     private void showAddProductDialog() {
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_add_product, null, false);
+        var builder = new com.google.android.material.dialog.MaterialAlertDialogBuilder(this);
+        View view = LayoutInflater.from(builder.getContext())
+                .inflate(R.layout.dialog_add_product, null, false);
+
         EditText etName = view.findViewById(R.id.etName);
         EditText etDesc = view.findViewById(R.id.etDesc);
 
-        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+        builder
                 .setTitle("Добавить товар")
                 .setView(view)
                 .setPositiveButton("Сохранить", (d, w) -> {
@@ -113,11 +114,14 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
     }
 
     private void showSellDialog(Product p) {
-        View view = getLayoutInflater().inflate(R.layout.dialog_sell, null, false);
+        var builder = new com.google.android.material.dialog.MaterialAlertDialogBuilder(this);
+        View view = LayoutInflater.from(builder.getContext())
+                .inflate(R.layout.dialog_sell, null, false);
+
         EditText etQty = view.findViewById(R.id.etQty);
         EditText etPrice = view.findViewById(R.id.etPrice);
 
-        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+        builder
                 .setTitle("Продать: " + p.name)
                 .setView(view)
                 .setPositiveButton("OK", (d, w) -> {
@@ -154,10 +158,13 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
 
     @Override
     public void onCost(Product p) {
-        View view = getLayoutInflater().inflate(R.layout.dialog_estimate_qty, null, false);
+        var builder = new com.google.android.material.dialog.MaterialAlertDialogBuilder(this);
+        View view = LayoutInflater.from(builder.getContext())
+                .inflate(R.layout.dialog_estimate_qty, null, false);
+
         EditText etQty = view.findViewById(R.id.etQty);
 
-        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+        builder
                 .setTitle("Себестоимость: " + p.name)
                 .setView(view)
                 .setPositiveButton("Рассчитать", (d, w) -> {

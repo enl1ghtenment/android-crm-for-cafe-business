@@ -10,11 +10,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.ostapenko.crm.R;
-import com.ostapenko.crm.auth.Session;                 // 👈 NEW
+import com.ostapenko.crm.auth.Session;
 import com.ostapenko.crm.db.AppDatabase;
 import com.ostapenko.crm.db.dao.IngredientDao;
 import com.ostapenko.crm.db.dao.ProductIngredientDao;
@@ -79,7 +78,10 @@ public class RecipeActivity extends AppCompatActivity implements RecipeAdapter.L
     }
 
     private void showAddRecipeItemDialog() {
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_add_recipe_item, null, false);
+        var builder = new com.google.android.material.dialog.MaterialAlertDialogBuilder(this);
+        View view = LayoutInflater.from(builder.getContext())
+                .inflate(R.layout.dialog_add_recipe_item, null, false);
+
         Spinner sp = view.findViewById(R.id.spIngredient);
         EditText etQty = view.findViewById(R.id.etQty);
 
@@ -91,7 +93,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeAdapter.L
                 ArrayAdapter<String> ad = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, display);
                 sp.setAdapter(ad);
 
-                new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                builder
                         .setTitle("Добавить в рецепт")
                         .setView(view)
                         .setPositiveButton("Сохранить", (d, w) -> {
@@ -122,7 +124,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeAdapter.L
     }
 
     @Override public void onDelete(int rowId) {
-        if (readOnly) return;                               // защита от случайных вызовов
+        if (readOnly) return;
         io.execute(() -> {
             recipeDao.deleteRow(rowId);
             loadData();

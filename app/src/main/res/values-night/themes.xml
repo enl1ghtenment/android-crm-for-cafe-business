@@ -9,7 +9,10 @@
         <item name="colorOnSurface">@android:color/white</item>
         <item name="colorOutline">@color/md_outline</item>
 
-        <!-- Глобальные виджеты -->
+        <item name="colorOnSurfaceSecondary">#E0FFFFFF</item>
+
+
+    <!-- Глобальные виджеты -->
         <item name="materialButtonStyle">@style/Btn.Filled</item>
         <item name="materialButtonOutlinedStyle">@style/Btn.Outlined</item>
 

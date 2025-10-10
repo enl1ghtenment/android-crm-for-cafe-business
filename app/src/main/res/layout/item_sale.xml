@@ -55,8 +55,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:textSize="13sp"
-            android:textColor="?attr/colorOnSurface" />
+            android:textColor="?attr/colorOnSurfaceSecondary" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
-
-
