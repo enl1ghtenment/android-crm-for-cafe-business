@@ -1,3 +1,4 @@
+// app/src/main/java/com/ostapenko/crm/ui/RecipeAdapter.java
 package com.ostapenko.crm.ui;
 
 import android.view.LayoutInflater;
@@ -14,7 +15,10 @@ import java.util.List;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.VH> {
 
-    public interface Listener { void onDelete(int rowId); }
+    public interface Listener {
+        void onDelete(int rowId);
+        void onOpenIngredient(String ingredientName);
+    }
 
     private final List<RecipeItemView> data = new ArrayList<>();
     private final Listener listener;
@@ -43,6 +47,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.VH> {
         h.tvIngredientName.setText(r.ingredientName + " (" + r.unit + ")");
         h.tvQty.setText(String.valueOf(r.quantity));
 
+        // клик по всей строке -> открыть ингредиент в Inventory
+        h.container.setOnClickListener(v -> {
+            if (listener != null) listener.onOpenIngredient(r.ingredientName);
+        });
+
         if (readOnly) {
             h.btnDelete.setVisibility(View.GONE);
             h.btnDelete.setOnClickListener(null);
@@ -57,13 +66,15 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.VH> {
     @Override public int getItemCount() { return data.size(); }
 
     static class VH extends RecyclerView.ViewHolder {
+        View container;
         TextView tvIngredientName, tvQty;
         Button btnDelete;
         VH(@NonNull View v) {
             super(v);
+            container       = v.findViewById(R.id.container);
             tvIngredientName = v.findViewById(R.id.tvIngredientName);
-            tvQty           = v.findViewById(R.id.tvQty);
-            btnDelete       = v.findViewById(R.id.btnDelete);
+            tvQty            = v.findViewById(R.id.tvQty);
+            btnDelete        = v.findViewById(R.id.btnDelete);
         }
     }
 }

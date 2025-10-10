@@ -9,9 +9,11 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.ostapenko.crm.R;
 import com.ostapenko.crm.auth.Session;
 import com.ostapenko.crm.db.AppDatabase;
@@ -19,6 +21,7 @@ import com.ostapenko.crm.db.dao.IngredientDao;
 import com.ostapenko.crm.db.dao.ProductIngredientDao;
 import com.ostapenko.crm.entity.Ingredient;
 import com.ostapenko.crm.entity.ProductIngredient;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -129,5 +132,11 @@ public class RecipeActivity extends AppCompatActivity implements RecipeAdapter.L
             recipeDao.deleteRow(rowId);
             loadData();
         });
+    }
+
+    // новый колбэк из адаптера: открыть Склад с автопоиском по названию ингредиента
+    @Override
+    public void onOpenIngredient(String ingredientName) {
+        InventoryActivity.startWithSearch(this, ingredientName);
     }
 }

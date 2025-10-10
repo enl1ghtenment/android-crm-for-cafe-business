@@ -1,5 +1,7 @@
 package com.ostapenko.crm.ui;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,21 +14,29 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ostapenko.crm.R;
+import com.ostapenko.crm.auth.Session;
 import com.ostapenko.crm.db.AppDatabase;
 import com.ostapenko.crm.db.dao.IngredientDao;
 import com.ostapenko.crm.entity.Ingredient;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.ostapenko.crm.auth.Session;
-
 public class InventoryActivity extends AppCompatActivity {
+
+    private static final String EXTRA_PRESEARCH = "presearch";
+
+    /** Запуск «Склад» с автопоиском (используется из RecipeActivity). */
+    public static void startWithSearch(Context ctx, String query) {
+        Intent i = new Intent(ctx, InventoryActivity.class);
+        i.putExtra(EXTRA_PRESEARCH, query);
+        ctx.startActivity(i);
+    }
 
     private IngredientAdapter adapter;
     private IngredientDao ingredientDao;
@@ -63,6 +73,13 @@ public class InventoryActivity extends AppCompatActivity {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void afterTextChanged(Editable s) {}
         });
+
+        // Если пришли из RecipeActivity — подставляем запрос в поиск
+        String pre = getIntent().getStringExtra(EXTRA_PRESEARCH);
+        if (pre != null && !pre.isEmpty()) {
+            etSearch.setText(pre);
+            etSearch.setSelection(pre.length());
+        }
 
         loadData();
     }
