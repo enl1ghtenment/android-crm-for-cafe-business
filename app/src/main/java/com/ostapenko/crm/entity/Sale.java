@@ -1,5 +1,6 @@
 package com.ostapenko.crm.entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -13,4 +14,6 @@ public class Sale {
     public Date saleDate;
     public double total;
     public Integer sellerId;
+    @NonNull
+    public String status = "NEW";
 }

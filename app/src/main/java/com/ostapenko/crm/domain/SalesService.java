@@ -89,4 +89,84 @@ public class SalesService {
         return result;
     }
 
+    /**
+     * Создать один заказ с несколькими позициями.
+     *
+     * @param lines список позиций корзины
+     * @param sellerId кто оформляет (может быть null)
+     *
+     * Каждая позиция корзины:
+     *  - productId
+     *  - qty (сколько штук)
+     *  - pricePerUnit (цена за штуку, которую набил кассир)
+     *
+     * Мы:
+     * 1. проверяем склад (чтобы хватает ингредиентов на все позиции)
+     * 2. списываем ингредиенты
+     * 3. создаём Sale со статусом "NEW"
+     * 4. создаём SaleItem для каждой строки
+     */
+    @WorkerThread
+    @Transaction
+    public int sellOrder(List<CartLine> lines, Integer sellerId) {
+
+        if (lines == null || lines.isEmpty()) {
+            throw new IllegalArgumentException("Пустой заказ");
+        }
+
+        // 1. Проверяем наличие ингредиентов по всем товарам сразу
+        //    (если чего-то не хватает -> кидаем исключение ДО списания)
+        for (CartLine cl : lines) {
+            if (cl.qty <= 0) throw new IllegalArgumentException("Количество должно быть >0");
+
+            int available = getMaxServings(cl.productId);
+            if (available < cl.qty) {
+                throw new IllegalStateException("Недостаточно ингредиентов для " + cl.productId);
+            }
+        }
+
+        // 2. Считаем общий total
+        double orderTotal = 0.0;
+        for (CartLine cl : lines) {
+            orderTotal += cl.qty * cl.pricePerUnit;
+        }
+
+        // 3. Списываем ингредиенты с учётом количества
+        for (CartLine cl : lines) {
+            List<ProductIngredient> recipe = recipeDao.getRecipe(cl.productId);
+            for (ProductIngredient r : recipe) {
+                double consume = r.quantity * cl.qty;
+                ingredientDao.decreaseStock(r.ingredientId, consume);
+            }
+        }
+
+        // 4. Создаём сам чек (Sale) со статусом "NEW"
+        Sale sale = new Sale();
+        sale.saleDate = new Date();
+        sale.total = orderTotal;
+        sale.sellerId = sellerId;
+        sale.status = "NEW";
+        int saleId = (int) saleDao.insert(sale);
+
+        // 5. Добавляем строки
+        for (CartLine cl : lines) {
+            SaleItem item = new SaleItem();
+            item.saleId = saleId;
+            item.productId = cl.productId;
+            item.quantity = cl.qty;
+            item.subtotal = cl.qty * cl.pricePerUnit;
+            saleItemDao.insert(item);
+        }
+
+        return saleId;
+    }
+
+    /**
+     * Одна позиция в корзине перед оформлением.
+     */
+    public static class CartLine {
+        public int productId;
+        public int qty;
+        public double pricePerUnit;
+    }
 }

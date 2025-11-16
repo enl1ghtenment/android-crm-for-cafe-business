@@ -161,18 +161,38 @@ public class SalesActivity extends AppCompatActivity {
                 updatePeriodLabelWeek(from);
             }
             case MONTH -> {
+                // lastFrom уже стоит на 1-е число месяца (после первого setMonth)
                 cal.setTime(lastFrom);
                 cal.add(Calendar.MONTH, delta);
-                Date from = startOfMonth(cal);
-                Date to   = endOfMonth(cal);
+
+                // from = 1 число нового месяца
+                cal.set(Calendar.DAY_OF_MONTH, 1);
+                Date from = startOfDay(cal.getTime());
+
+                // to = последний день того же месяца
+                Calendar calTo = (Calendar) cal.clone();
+                calTo.set(Calendar.DAY_OF_MONTH, calTo.getActualMaximum(Calendar.DAY_OF_MONTH));
+                Date to = endOfDay(calTo.getTime());
+
                 loadRange(from, to);
                 updatePeriodLabelMonth(from);
             }
             case YEAR -> {
+                // lastFrom уже стоит на 1 января
                 cal.setTime(lastFrom);
                 cal.add(Calendar.YEAR, delta);
-                Date from = startOfYear(cal);
-                Date to   = endOfYear(cal);
+
+                // from = 1 янв нового года
+                cal.set(Calendar.MONTH, Calendar.JANUARY);
+                cal.set(Calendar.DAY_OF_MONTH, 1);
+                Date from = startOfDay(cal.getTime());
+
+                // to = 31 дек этого года
+                Calendar calTo = (Calendar) cal.clone();
+                calTo.set(Calendar.MONTH, Calendar.DECEMBER);
+                calTo.set(Calendar.DAY_OF_MONTH, 31);
+                Date to = endOfDay(calTo.getTime());
+
                 loadRange(from, to);
                 updatePeriodLabelYear(from);
             }
@@ -196,19 +216,33 @@ public class SalesActivity extends AppCompatActivity {
     }
 
     private void setMonth(Calendar today) {
+        // from = 1 число этого месяца 00:00
         Calendar fromCal = (Calendar) today.clone();
-        fromCal.add(Calendar.MONTH, -1);
+        fromCal.set(Calendar.DAY_OF_MONTH, 1);
         Date from = startOfDay(fromCal.getTime());
-        Date to   = endOfDay(today.getTime());
+
+        // to = последний день этого месяца 23:59
+        Calendar toCal = (Calendar) today.clone();
+        toCal.set(Calendar.DAY_OF_MONTH, toCal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date to = endOfDay(toCal.getTime());
+
         loadRange(from, to);
         updatePeriodLabelMonth(from);
     }
 
     private void setYear(Calendar today) {
+        // from = 1 января этого года 00:00
         Calendar fromCal = (Calendar) today.clone();
-        fromCal.add(Calendar.YEAR, -1);
+        fromCal.set(Calendar.MONTH, Calendar.JANUARY);
+        fromCal.set(Calendar.DAY_OF_MONTH, 1);
         Date from = startOfDay(fromCal.getTime());
-        Date to   = endOfDay(today.getTime());
+
+        // to = 31 декабря этого года 23:59
+        Calendar toCal = (Calendar) today.clone();
+        toCal.set(Calendar.MONTH, Calendar.DECEMBER);
+        toCal.set(Calendar.DAY_OF_MONTH, 31);
+        Date to = endOfDay(toCal.getTime());
+
         loadRange(from, to);
         updatePeriodLabelYear(from);
     }
