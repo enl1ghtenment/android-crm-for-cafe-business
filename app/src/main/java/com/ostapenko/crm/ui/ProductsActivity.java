@@ -75,18 +75,51 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
         View view = LayoutInflater.from(builder.getContext())
                 .inflate(R.layout.dialog_add_product, null, false);
 
-        EditText etName = view.findViewById(R.id.etName);
-        EditText etDesc = view.findViewById(R.id.etDesc);
+        EditText etName  = view.findViewById(R.id.etName);
+        EditText etDesc  = view.findViewById(R.id.etDesc);
+        EditText etImage = view.findViewById(R.id.etImageResName);
+        android.widget.Spinner spCategory = view.findViewById(R.id.spCategory);
+
+        String[] categories = new String[]{
+                "Кофе",
+                "Гриль",
+                "Фритюр",
+                "Коктейли",
+                "Десерты",
+                "Прочее"
+        };
+
+        android.widget.ArrayAdapter<String> ad = new android.widget.ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                categories
+        );
+        spCategory.setAdapter(ad);
 
         builder
                 .setTitle("Добавить товар")
                 .setView(view)
                 .setPositiveButton("Сохранить", (d, w) -> {
-                    String name = etName.getText().toString().trim();
-                    String desc = etDesc.getText().toString().trim();
-                    if (name.isEmpty()) { Toast.makeText(this, "Название пустое", Toast.LENGTH_SHORT).show(); return; }
+                    String name  = etName.getText().toString().trim();
+                    String desc  = etDesc.getText().toString().trim();
+                    String img   = etImage.getText().toString().trim();
+
+                    if (name.isEmpty()) {
+                        Toast.makeText(this, "Название пустое", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    int catPos = spCategory.getSelectedItemPosition();
+                    String cat = (catPos >= 0 && catPos < categories.length)
+                            ? categories[catPos]
+                            : "Прочее";
+
                     Product p = new Product();
-                    p.name = name; p.description = desc;
+                    p.name = name;
+                    p.description = desc;
+                    p.category = cat;
+                    p.imageResName = img.isEmpty() ? null : img;
+
                     io.execute(() -> {
                         productDao.insert(p);
                         loadData();
@@ -95,6 +128,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
                 .setNegativeButton("Отмена", null)
                 .show();
     }
+
 
     // ==== ProductAdapter.Listener ====
     @Override public void onEditRecipe(Product p) {

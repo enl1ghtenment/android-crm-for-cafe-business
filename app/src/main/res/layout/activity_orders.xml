@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Заголовок -->
+    <!-- Toolbar -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbarOrders"
         android:layout_width="match_parent"
@@ -15,47 +15,136 @@
         app:title="Заказы"
         app:titleTextColor="?attr/colorOnSurface" />
 
-    <!-- Переключатель NEW / DONE -->
+    <!-- Табы: Новый заказ / История -->
     <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/groupStatus"
+        android:id="@+id/groupOrdersTabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
+        android:layout_marginTop="8dp"
         app:singleSelection="true">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnActive"
+            android:id="@+id/btnTabMakeOrder"
             style="@style/Btn.Outlined"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Активные"/>
+            android:text="Новый заказ"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnDone"
+            android:id="@+id/btnTabHistory"
             style="@style/Btn.Outlined"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Готовые"/>
+            android:text="История заказов"/>
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
-    <!-- Кнопка Обновить -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnRefresh"
-        style="@style/Btn.Outlined"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Обновить"
-        android:layout_marginTop="8dp"
-        android:layout_gravity="end"/>
+    <!-- ======= БЛОК: КОНСТРУКТОР ЗАКАЗА ======= -->
+    <LinearLayout
+        android:id="@+id/layoutOrderBuilder"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingTop="8dp">
 
-    <!-- Список заказов -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvOrders"
+        <TextView
+            android:id="@+id/tvCategoriesLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Категории"
+            android:textColor="?attr/colorOnSurface"
+            android:textStyle="bold"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvOrderCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:clipToPadding="false"/>
+
+        <TextView
+            android:id="@+id/tvProductsLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Позиции"
+            android:textColor="?attr/colorOnSurface"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvOrderProducts"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingTop="4dp"
+            android:clipToPadding="false"/>
+
+        <!-- Панель текущего заказа -->
+        <TextView
+            android:id="@+id/tvCurrentOrder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="12dp"
+            android:background="@drawable/bg_current_order_panel"
+            android:text="Заказ пуст"
+            android:textColor="?attr/colorOnSurface"/>
+    </LinearLayout>
+
+    <!-- ======= БЛОК: ИСТОРИЯ ЗАКАЗОВ ======= -->
+    <LinearLayout
+        android:id="@+id/layoutHistory"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:paddingTop="8dp"
-        android:clipToPadding="false"/>
+        android:visibility="gone">
+
+        <!-- Активные / Готовые -->
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/groupStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnActive"
+                style="@style/Btn.Outlined"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Активные"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDone"
+                style="@style/Btn.Outlined"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Готовые"/>
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <!-- Кнопка Обновить -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRefresh"
+            style="@style/Btn.Outlined"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Обновить"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="end"/>
+
+        <!-- Список заказов -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvOrders"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingTop="8dp"
+            android:clipToPadding="false"/>
+    </LinearLayout>
+
 </LinearLayout>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- фон панели -->
+    <solid android:color="@android:color/transparent" />
+
+    <!-- рамка -->
+    <stroke
+        android:width="1dp"
+        android:color="?attr/colorOnSurface" />
+
+    <!-- скругление -->
+    <corners android:radius="12dp" />
+
+    <!-- внутренние отступы (чтоб текст не прилипал к краю) -->
+    <padding
+        android:left="8dp"
+        android:top="4dp"
+        android:right="8dp"
+        android:bottom="4dp" />
+</shape>

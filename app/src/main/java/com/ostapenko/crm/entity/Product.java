@@ -10,4 +10,8 @@ public class Product {
 
     public String name;
     public String description;
+
+    public String category;
+
+    public String imageResName;
 }

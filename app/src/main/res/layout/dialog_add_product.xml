@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <!-- Название -->
     <com.google.android.material.textfield.TextInputLayout
         style="?attr/textInputStyle"
         android:hint="Название (напр. Мохито)"
@@ -22,6 +23,7 @@
             android:textColorHint="?attr/colorOnSurface"/>
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Описание -->
     <com.google.android.material.textfield.TextInputLayout
         style="?attr/textInputStyle"
         android:hint="Описание (опционально)"
@@ -32,6 +34,40 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etDesc"
+            style="?attr/editTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="?attr/colorOnSurface"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Категория -->
+    <TextView
+        android:id="@+id/tvCategoryLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Категория"
+        android:textSize="14sp"
+        android:layout_marginTop="12dp"
+        android:textColor="?attr/colorOnSurface"/>
+
+    <Spinner
+        android:id="@+id/spCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp" />
+
+    <!-- Имя ресурса картинки (опционально) -->
+    <com.google.android.material.textfield.TextInputLayout
+        style="?attr/textInputStyle"
+        android:hint="Имя ресурса картинки (опционально, напр. ic_mojito)"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:hintTextColor="?attr/colorOnSurface">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etImageResName"
             style="?attr/editTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
