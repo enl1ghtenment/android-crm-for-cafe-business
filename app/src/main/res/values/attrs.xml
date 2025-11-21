@@ -2,4 +2,6 @@
 <resources>
     <!-- Кастомный атрибут для более яркого второстепенного текста -->
     <attr name="colorOnSurfaceSecondary" format="color"/>
+    <attr name="colorOnSurface" format="color" />
+
 </resources>
