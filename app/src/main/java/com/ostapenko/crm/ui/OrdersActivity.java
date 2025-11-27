@@ -523,9 +523,9 @@ public class OrdersActivity extends AppCompatActivity
             if (qty <= 0) continue;
 
             SaleItem item = new SaleItem();
-            item.saleId = saleId;        // подгони тип, если long
+            item.saleId = saleId;
             item.productId = productId;
-            item.quantity = qty;              // если поле называется иначе — поправь
+            item.quantity = qty;
 
             // цену/сумму можно не ставить (0) — это чисто "кухонный" заказ
             saleItemDao.insert(item);
