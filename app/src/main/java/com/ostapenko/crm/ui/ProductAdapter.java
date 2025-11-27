@@ -25,6 +25,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.VH> {
     private final List<Product> data = new ArrayList<>();
     private final Listener listener;
     private final boolean canDelete;
+    private TextView tvPrice;
 
     private final List<Product> all = new ArrayList<>();
 
@@ -53,6 +54,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.VH> {
         h.tvServings.setText("Считаю…");
         if (listener != null) listener.onBindForServings(p, h.tvServings);
 
+        if (p.price > 0) {
+            h.tvPrice.setText("Цена: ₴" + trim(p.price));
+        } else {
+            h.tvPrice.setText("Цена: —");
+        }
+
         h.btnEditRecipe.setOnClickListener(v -> { if (listener != null) listener.onEditRecipe(p); });
         h.btnCost.setOnClickListener(v -> { if (listener != null) listener.onCost(p); });
         h.btnSell.setOnClickListener(v -> { if (listener != null) listener.onSell(p); });
@@ -67,21 +74,29 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.VH> {
         }
     }
 
+    private static String trim(double d) {
+        String s = String.valueOf(d);
+        return s.endsWith(".0") ? s.substring(0, s.length() - 2) : s;
+    }
+
+
     @Override public int getItemCount() { return data.size(); }
 
     static class VH extends RecyclerView.ViewHolder {
-        TextView tvName, tvDesc, tvServings;
+        TextView tvName, tvDesc, tvServings, tvPrice;
         Button btnEditRecipe, btnCost, btnSell;
         VH(@NonNull View v) {
             super(v);
             tvName = v.findViewById(R.id.tvName);
             tvDesc = v.findViewById(R.id.tvDesc);
             tvServings = v.findViewById(R.id.tvServings);
+            tvPrice = v.findViewById(R.id.tvPrice);
             btnEditRecipe = v.findViewById(R.id.btnEditRecipe);
             btnCost = v.findViewById(R.id.btnCost);
             btnSell = v.findViewById(R.id.btnSell);
         }
     }
+
 
     public void filter(String q) {
         data.clear();

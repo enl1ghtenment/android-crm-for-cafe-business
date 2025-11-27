@@ -14,4 +14,7 @@ public class Product {
     public String category;
 
     public String imageResName;
+
+    public double price;
+
 }

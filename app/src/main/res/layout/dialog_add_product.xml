@@ -41,6 +41,25 @@
             android:textColorHint="?attr/colorOnSurface"/>
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- 🆕 Цена за 1 шт -->
+    <com.google.android.material.textfield.TextInputLayout
+        style="?attr/textInputStyle"
+        android:hint="Цена за 1 шт (₴)"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:hintTextColor="?attr/colorOnSurface">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPrice"
+            style="?attr/editTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="?attr/colorOnSurface"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
     <!-- Категория -->
     <TextView
         android:id="@+id/tvCategoryLabel"

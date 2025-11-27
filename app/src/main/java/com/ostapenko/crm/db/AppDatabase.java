@@ -22,7 +22,7 @@ import com.ostapenko.crm.entity.*;
                 SaleItem.class,
                 User.class
         },
-        version = 8,                  // 🔼 было 7, стало 8
+        version = 9,
         exportSchema = true
 )
 @TypeConverters({Converters.class})
@@ -109,6 +109,14 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+    private static final Migration MIGRATION_8_9 = new Migration(8, 9) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase db) {
+            db.execSQL("ALTER TABLE products ADD COLUMN price REAL NOT NULL DEFAULT 0");
+        }
+    };
+
+
     public static AppDatabase getInstance(Context context) {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
@@ -124,7 +132,8 @@ public abstract class AppDatabase extends RoomDatabase {
                                     MIGRATION_4_5,
                                     MIGRATION_5_6,
                                     MIGRATION_6_7,
-                                    MIGRATION_7_8      // 🔔 не забыли подключить
+                                    MIGRATION_7_8,
+                                    MIGRATION_8_9
                             )
                             .addCallback(new Callback() {
                                 @Override public void onCreate(@NonNull SupportSQLiteDatabase db) {

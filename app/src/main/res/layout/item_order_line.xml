@@ -1,24 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLine"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="@android:color/white">
 
     <TextView
         android:id="@+id/tvLineProduct"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Латте 0,4"
+        android:textSize="16sp"
         android:textStyle="bold"
-        android:textSize="15sp"
-        android:textColor="?attr/colorOnSurface"/>
+        android:textColor="@android:color/black" />
 
     <TextView
         android:id="@+id/tvLineQtySum"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="13sp"
-        android:textColor="?attr/colorOnSurfaceSecondary"/>
+        android:text="Кол-во: 2 | Сумма: ₴180"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        android:paddingTop="2dp" />
+
 </LinearLayout>

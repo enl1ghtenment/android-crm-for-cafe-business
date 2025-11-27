@@ -78,6 +78,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
         EditText etName  = view.findViewById(R.id.etName);
         EditText etDesc  = view.findViewById(R.id.etDesc);
         EditText etImage = view.findViewById(R.id.etImageResName);
+        EditText etPrice = view.findViewById(R.id.etPrice);               // 🆕
         android.widget.Spinner spCategory = view.findViewById(R.id.spCategory);
 
         String[] categories = new String[]{
@@ -100,12 +101,28 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
                 .setTitle("Добавить товар")
                 .setView(view)
                 .setPositiveButton("Сохранить", (d, w) -> {
-                    String name  = etName.getText().toString().trim();
-                    String desc  = etDesc.getText().toString().trim();
-                    String img   = etImage.getText().toString().trim();
+                    String name   = etName.getText().toString().trim();
+                    String desc   = etDesc.getText().toString().trim();
+                    String img    = etImage.getText().toString().trim();
+                    String sPrice = etPrice.getText().toString().trim();   // 🆕 сырая строка
 
                     if (name.isEmpty()) {
                         Toast.makeText(this, "Название пустое", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    double price = 0.0;
+                    try {
+                        if (!sPrice.isEmpty()) {
+                            price = Double.parseDouble(sPrice);
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(this, "Неверный формат цены", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (price < 0) {
+                        Toast.makeText(this, "Цена не может быть отрицательной", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -119,6 +136,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
                     p.description = desc;
                     p.category = cat;
                     p.imageResName = img.isEmpty() ? null : img;
+                    p.price = price;
 
                     io.execute(() -> {
                         productDao.insert(p);
@@ -154,6 +172,10 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
 
         EditText etQty = view.findViewById(R.id.etQty);
         EditText etPrice = view.findViewById(R.id.etPrice);
+
+        if (p.price > 0) {
+            etPrice.setText(String.valueOf(p.price));
+        }
 
         builder
                 .setTitle("Продать: " + p.name)

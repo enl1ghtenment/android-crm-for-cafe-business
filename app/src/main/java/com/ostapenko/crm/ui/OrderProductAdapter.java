@@ -23,6 +23,7 @@ public class OrderProductAdapter extends RecyclerView.Adapter<OrderProductAdapte
 
     private final Listener listener;
     private final List<Product> data = new ArrayList<>();
+    private TextView tvPrice;
 
     public OrderProductAdapter(Listener listener) {
         this.listener = listener;
@@ -47,9 +48,18 @@ public class OrderProductAdapter extends RecyclerView.Adapter<OrderProductAdapte
         Product p = data.get(position);
         h.tvName.setText(p.name);
 
+        if (p.price > 0)
+            h.tvPrice.setText("₴" + trim(p.price));
+        else
+            h.tvPrice.setText("₴ —");
+
         h.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onProductClick(p);
         });
+    }
+    private static String trim(double d) {
+        String s = String.valueOf(d);
+        return s.endsWith(".0") ? s.substring(0, s.length()-2) : s;
     }
 
     @Override
@@ -59,9 +69,11 @@ public class OrderProductAdapter extends RecyclerView.Adapter<OrderProductAdapte
 
     static class VH extends RecyclerView.ViewHolder {
         final TextView tvName;
+        final TextView tvPrice;   // 🆕
         VH(@NonNull View v) {
             super(v);
             tvName = v.findViewById(R.id.tvProductName);
+            tvPrice = v.findViewById(R.id.tvProductPrice);   // 🆕
         }
     }
 }

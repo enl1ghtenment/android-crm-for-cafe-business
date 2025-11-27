@@ -1,6 +1,7 @@
 package com.ostapenko.crm.db.dao;
 
 import androidx.annotation.WorkerThread;
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -17,14 +18,12 @@ import java.util.List;
 @Dao
 public interface SaleDao {
 
-    // --- базовые CRUD ---
     @Insert
     long insert(Sale sale);
 
     @Update
     int update(Sale sale);
 
-    // --- аналитика для экрана "Продажи" ---
     @Query("SELECT * FROM sales " +
             "WHERE date(saleDate/1000, 'unixepoch') = date(:day/1000, 'unixepoch') " +
             "ORDER BY saleDate DESC")
@@ -78,9 +77,6 @@ public interface SaleDao {
     )
     List<SaleRow> findRowsBetween(Date from, Date to);
 
-    // --- для экрана "Заказы" (кухня / активные / история) ---
-
-    // Заголовки заказов по статусу (NEW / DONE)
     @Query(
             "SELECT s.id AS saleId, " +
                     "       s.saleDate AS saleDate, " +
@@ -93,11 +89,10 @@ public interface SaleDao {
                     "FROM sales s " +
                     "LEFT JOIN users u ON u.id = s.sellerId " +
                     "WHERE s.status = :status " +
-                    "ORDER BY s.saleDate DESC"
+                    "ORDER BY s.saleDate DESC, s.id DESC"
     )
     List<OrderWithItems> findOrdersByStatus(String status);
 
-    // Позиции конкретного заказа
     @Query(
             "SELECT si.productId AS productId, " +
                     "       p.name AS productName, " +
@@ -110,7 +105,13 @@ public interface SaleDao {
     )
     List<OrderWithItems.OrderLine> findLinesForOrder(int saleId);
 
-    // Пометить заказ как выданный
     @Query("UPDATE sales SET status = 'DONE' WHERE id = :saleId")
     void markDone(int saleId);
+
+
+    @Query("UPDATE sales SET status = :status WHERE id = :saleId")
+    void updateStatus(int saleId, String status);
+
+    @Query("SELECT * FROM sales WHERE status = :status ORDER BY id DESC")
+    LiveData<List<Sale>> getByStatus(String status);
 }

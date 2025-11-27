@@ -32,6 +32,7 @@ import com.ostapenko.crm.entity.Sale;
 import com.ostapenko.crm.entity.SaleItem;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -202,18 +203,41 @@ public class OrdersActivity extends AppCompatActivity
             tvCurrentOrder.setText("Заказ пуст");
             return;
         }
-        int lines = currentOrder.size();
+        final int lines = currentOrder.size();
         int totalQty = 0;
         for (int q : currentOrder.values()) totalQty += q;
+        final int totalQtyFinal = totalQty;
 
-        tvCurrentOrder.setText(String.format(
-                Locale.getDefault(),
-                "Текущий заказ: позиций %d, всего %d шт. (нажми, чтобы изменить)",
-                lines, totalQty
-        ));
+        io.execute(() -> {
+            double sum = 0.0;
+            for (Map.Entry<Integer, Integer> e : currentOrder.entrySet()) {
+                int productId = e.getKey();
+                int qty = e.getValue();
+
+                if (qty <= 0) continue;
+
+                Product p = productDao.findById(productId);
+                double price = (p != null ? p.price : 0.0);
+                sum += qty * price;
+            }
+            final double totalSum = sum;
+
+            runOnUiThread(() -> tvCurrentOrder.setText(
+                    String.format(
+                            Locale.getDefault(),
+                            "Текущий заказ: позиций %d, всего %d шт., на сумму ₴%s (нажми, чтобы изменить)",
+                            lines,
+                            totalQtyFinal,
+                            trim(totalSum)
+                    )
+            ));
+        });
     }
 
-    // ======== Диалог редактирования текущего заказа =========
+    private static String trim(double d) {
+        String s = String.valueOf(d);
+        return s.endsWith(".0") ? s.substring(0, s.length() - 2) : s;
+    }
 
     private void showCurrentOrderDialog() {
         if (currentOrder.isEmpty()) {
@@ -504,33 +528,53 @@ public class OrdersActivity extends AppCompatActivity
     private void createOrderInDb(Map<Integer, Integer> items) {
         if (items.isEmpty()) return;
 
-        Sale sale = new Sale();
-        sale.status = "NEW";                    // поле точно есть (миграция 6_7)
-        try {
-            // если в Sale есть sellerId (Integer / int) — проставится
-            sale.sellerId = session.userId();
-        } catch (Throwable ignored) {
-            // если поля нет — просто проигнорируется, поправишь под свою модель
-        }
-
-        long saleIdLong = saleDao.insert(sale);   // стандартный @Insert
-        int saleId = (int) saleIdLong;
-
+        // 1) Посчитаем общий total по заказу на основе цены товара
+        double orderTotal = 0.0;
         for (Map.Entry<Integer, Integer> e : items.entrySet()) {
             int productId = e.getKey();
             int qty = e.getValue();
-
             if (qty <= 0) continue;
+
+            Product p = productDao.findById(productId);
+            double pricePerUnit = (p != null ? p.price : 0.0);
+            orderTotal += qty * pricePerUnit;
+        }
+
+        // 2) Создаём сам чек (Sale)
+        Sale sale = new Sale();
+        sale.status = "NEW";
+        sale.saleDate = new java.util.Date();   // 🔥 чтобы не улетал в самый низ
+        sale.total = orderTotal;
+
+        try {
+            sale.sellerId = session.userId();
+        } catch (Throwable ignored) {
+            // пофиг, не критично
+        }
+
+        long saleIdLong = saleDao.insert(sale);
+        int saleId = (int) saleIdLong;
+
+        // 3) Пишем позиции с subtotal
+        for (Map.Entry<Integer, Integer> e : items.entrySet()) {
+            int productId = e.getKey();
+            int qty = e.getValue();
+            if (qty <= 0) continue;
+
+            Product p = productDao.findById(productId);
+            double pricePerUnit = (p != null ? p.price : 0.0);
+            double subtotal = qty * pricePerUnit;
 
             SaleItem item = new SaleItem();
             item.saleId = saleId;
             item.productId = productId;
             item.quantity = qty;
+            item.subtotal = subtotal;          // 💰 вот оно!
 
-            // цену/сумму можно не ставить (0) — это чисто "кухонный" заказ
             saleItemDao.insert(item);
         }
     }
+
 
     // ============ ИСТОРИЯ =============
 

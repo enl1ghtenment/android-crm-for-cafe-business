@@ -2,8 +2,10 @@ package com.ostapenko.crm.ui;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,6 +24,7 @@ import com.ostapenko.crm.auth.Session;
 import com.ostapenko.crm.db.AppDatabase;
 import com.ostapenko.crm.db.dao.SaleDao;
 import com.ostapenko.crm.dto.SaleRow;
+import com.ostapenko.crm.dto.OrderWithItems;
 
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -33,7 +36,7 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class SalesActivity extends AppCompatActivity {
+public class SalesActivity extends AppCompatActivity implements SalesAdapter.Listener{
 
     private enum Mode { DAY, WEEK, MONTH, YEAR }
 
@@ -81,7 +84,7 @@ public class SalesActivity extends AppCompatActivity {
 
         androidx.recyclerview.widget.RecyclerView rv = findViewById(R.id.rvSales);
         rv.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new SalesAdapter();
+        adapter = new SalesAdapter(this);
         rv.setAdapter(adapter);
 
         Button btnDay   = findViewById(R.id.btnDay);
@@ -161,15 +164,12 @@ public class SalesActivity extends AppCompatActivity {
                 updatePeriodLabelWeek(from);
             }
             case MONTH -> {
-                // lastFrom уже стоит на 1-е число месяца (после первого setMonth)
                 cal.setTime(lastFrom);
                 cal.add(Calendar.MONTH, delta);
 
-                // from = 1 число нового месяца
                 cal.set(Calendar.DAY_OF_MONTH, 1);
                 Date from = startOfDay(cal.getTime());
 
-                // to = последний день того же месяца
                 Calendar calTo = (Calendar) cal.clone();
                 calTo.set(Calendar.DAY_OF_MONTH, calTo.getActualMaximum(Calendar.DAY_OF_MONTH));
                 Date to = endOfDay(calTo.getTime());
@@ -178,16 +178,13 @@ public class SalesActivity extends AppCompatActivity {
                 updatePeriodLabelMonth(from);
             }
             case YEAR -> {
-                // lastFrom уже стоит на 1 января
                 cal.setTime(lastFrom);
                 cal.add(Calendar.YEAR, delta);
 
-                // from = 1 янв нового года
                 cal.set(Calendar.MONTH, Calendar.JANUARY);
                 cal.set(Calendar.DAY_OF_MONTH, 1);
                 Date from = startOfDay(cal.getTime());
 
-                // to = 31 дек этого года
                 Calendar calTo = (Calendar) cal.clone();
                 calTo.set(Calendar.MONTH, Calendar.DECEMBER);
                 calTo.set(Calendar.DAY_OF_MONTH, 31);
@@ -446,4 +443,51 @@ public class SalesActivity extends AppCompatActivity {
     }
 
     private static String nullToEmpty(String s) { return s == null ? "" : s; }
+
+    @Override
+    public void onSaleClick(int saleId, @Nullable Date saleDate) {
+        io.execute(() -> {
+            try {
+                List<OrderWithItems.OrderLine> lines = saleDao.findLinesForOrder(saleId);
+                runOnUiThread(() -> showSaleLinesDialog(saleId, saleDate, lines));
+            } catch (Exception e) {
+                runOnUiThread(() -> Toast.makeText(
+                        this,
+                        "Ошибка позиций: " + e.getMessage(),
+                        Toast.LENGTH_LONG
+                ).show());
+            }
+        });
+    }
+
+    private void showSaleLinesDialog(int saleId,
+                                     @Nullable Date saleDate,
+                                     List<OrderWithItems.OrderLine> lines) {
+
+        View dialogView = LayoutInflater.from(this)
+                .inflate(R.layout.dialog_order_lines, null, false);
+
+        androidx.recyclerview.widget.RecyclerView rv =
+                dialogView.findViewById(R.id.rvOrderLines);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+
+        OrderLinesAdapter linesAdapter = new OrderLinesAdapter();
+        rv.setAdapter(linesAdapter);
+        linesAdapter.submit(lines);
+
+        TextView tvTitle = dialogView.findViewById(R.id.tvDialogTitle);
+
+        String title = "Чек #" + saleId;
+        if (saleDate != null) {
+            SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
+            title += " (" + df.format(saleDate) + ")";
+        }
+        tvTitle.setText(title);
+
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this,
+                R.style.ThemeOverlay_CRM_Dialog)
+                .setView(dialogView)
+                .setPositiveButton("OK", null)
+                .show();
+    }
 }

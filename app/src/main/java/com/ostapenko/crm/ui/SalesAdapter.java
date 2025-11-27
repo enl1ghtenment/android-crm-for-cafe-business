@@ -19,11 +19,19 @@ import java.util.Locale;
 
 public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.VH> {
 
+    public interface Listener {
+        void onSaleClick(int saleId, java.util.Date saleDate);
+    }
+
     private final List<SaleRow> data = new ArrayList<>();
     private final List<SaleRow> all = new ArrayList<>();
-
     private final SimpleDateFormat df =
             new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
+    private final Listener listener;
+
+    public SalesAdapter(Listener listener) {
+        this.listener = listener;
+    }
 
     public void submit(List<SaleRow> items) {
         all.clear();
@@ -47,19 +55,18 @@ public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.VH> {
     public void onBindViewHolder(@NonNull VH h, int position) {
         SaleRow r = data.get(position);
 
-        // дата
+        h.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onSaleClick(r.saleId, r.saleDate);
+            }
+        });
         Date sd = r.saleDate;
         String dateText = (sd == null) ? "-" : df.format(sd);
         h.tvDate.setText(dateText);
-
-        // сумма по строке
         h.tvTotal.setText("₴" + trim(r.subtotal));
-
-        // позиция товара
         String productName = (r.productName == null ? "" : r.productName);
         h.tvProduct.setText(productName + " × " + r.quantity);
 
-        // продавец
         String seller;
         if (r.firstName != null && !r.firstName.isEmpty()) {
             seller = r.firstName + (r.lastName == null ? "" : " " + r.lastName);
@@ -124,7 +131,6 @@ public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.VH> {
                 String loginStr = (r.login == null ? "" : r.login)
                         .toLowerCase(Locale.getDefault());
 
-                // хотим чтобы поиск по "120" нашёл чек 120 грн тоже
                 String saleTotalStr = String.valueOf(r.saleTotal)
                         .toLowerCase(Locale.getDefault());
 
